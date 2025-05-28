@@ -1,0 +1,15 @@
+.breadcrumb {
+  height: 30px;
+  margin: 15px 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .breadcrumb-item {
+    color: #00199F;
+    line-height: 30px;
+    font-size: 16px;
+  }
+}

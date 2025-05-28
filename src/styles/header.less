@@ -1,0 +1,155 @@
+@import '~antd/lib/style/themes/default.less';
+
+header {
+  .trigger {
+    font-size: 16px;
+    line-height: 50px;
+    padding: 0 24px;
+    transition: color 0.3s;
+    vertical-align: top;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+}
+
+.aside-menu {
+  height: calc(100% - @layout-header-height);
+}
+
+.sider-logo {
+  height: @layout-header-height;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 15px 0 10px 15px;
+  display: block;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  .logo {
+    float: left;
+    height: 100%;
+    width: 100%;
+    transition: width 0.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+    overflow: hidden;
+
+    img {
+      height: 100%;
+    }
+  }
+
+
+  .toggle-menu {
+    float: right;
+    margin-right: 10px;
+
+    img {
+      cursor: pointer;
+    }
+  }
+
+  &.collapsed {
+    padding-left: 24px;
+
+    .logo {
+      width: 32px;
+    }
+
+    .toggle-menu {
+      margin-right: 24.5px;
+    }
+  }
+}
+
+.site-layout {
+  min-height: 100%;
+  position: relative;
+  overflow: hidden;
+
+  #content-container {
+    height: calc(100% - 64px);
+    position: relative;
+
+    #content .ant-layout-content {
+      margin: 0 16px;
+      z-index: 1;
+
+      .site-layout-background {
+        background-color: #ffffff;
+        padding: 16px;
+      }
+    }
+
+    &.login {
+      height: 100%;
+    }
+
+    &:not(.login) #content {
+      flex: auto;
+      //margin: 10px 0 16px;
+    }
+
+    &::-webkit-scrollbar {
+      display: block;
+    }
+  }
+}
+
+.ant-layout-header {
+  .sider-logo {
+    @media screen and(max-width: 991.98px) {
+      display: none;
+    }
+  }
+
+  .application-name {
+    //margin-left: 40px;
+    //margin-right: 20px;
+    //float: left;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    img {
+      @media screen and(min-width: 768px) {
+        margin-right: 20px
+      }
+      @media screen and(max-width: 575.98px) {
+        display: none;
+      }
+    }
+
+    font-size: 16px;
+
+    .application-name__text {
+      text-transform: uppercase;
+      line-height: 20px;
+      text-align: center;
+      white-space: nowrap;
+      //color: #FFFFFF;
+      color: #00199F;
+      font-size: 22px;
+
+      @media screen and(min-width: 992px) and (max-width: 1199.98px) {
+        font-size: 14px;
+      }
+      @media screen and(min-width: 1200px) and (max-width: 1599.98px) {
+        font-size: 18px;
+      }
+
+      @media screen and(max-width: 1365.98px) {
+        display: none;
+      }
+    }
+
+    .application-name__tradar {
+      font-size: 18px;
+      display: none;
+
+      @media screen and(min-width: 768px) and (max-width: 1199.98px) {
+        display: block;
+      }
+    }
+  }
+
+}
