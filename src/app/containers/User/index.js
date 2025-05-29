@@ -6,7 +6,7 @@ import { CheckCircleOutlined, MobileOutlined, MailOutlined } from "@ant-design/i
 
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import Loading from "@components/Loading";
-import { createUser, getAllCustomer } from "@app/services/Customer";
+import { createUser } from "@app/services/User";
 import Filter from "@components/Filter";
 
 import {
@@ -15,7 +15,7 @@ import {
   handleReplaceUrlSearch,
   paginationConfig,
 } from "@app/common/functionCommons";
-import CreateCustomer from "@containers/User/CreateUser";
+import CreateUser from "@containers/User/CreateUser";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
 import { getAllUser } from "../../services/User";
@@ -32,7 +32,7 @@ function User({ myInfo }) {
     query: {},
   });
 
-  const [stateCreateCustomer, setStateCreateCustomer] = useState({
+  const [stateCreateUser, setStateCreateUser] = useState({
     isShowModal: false,
     createUserSelected: null,
   });
@@ -49,11 +49,11 @@ function User({ myInfo }) {
     })();
   }, []);
 
-  function handleShowModalCreateCustomer(isShowModal, createUserSelected = null) {
+  function handleShowModalCreateUser(isShowModal, createUserSelected = null) {
     if (isShowModal) {
-      setStateCreateCustomer({ isShowModal, createUserSelected });
+      setStateCreateUser({ isShowModal, createUserSelected });
     } else {
-      setStateCreateCustomer({ ...stateCreateCustomer, createUserSelected });
+      setStateCreateUser({ ...stateCreateUser, createUserSelected });
     }
   }
 
@@ -64,7 +64,6 @@ function User({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllUser(page, limit, query);
     if (apiResponse) {
-      console.log("apiResponse", apiResponse.docs);
       setUsers({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -84,21 +83,22 @@ function User({ myInfo }) {
     await getUser(1, users.pageSize, query);
   }
 
-  async function handleCreateCustomer(dataForm) {
+  async function handleCreateUser(dataForm) {
     setLoading(true);
     let data = {
-      user_id: myInfo._id,
+      user_name: dataForm.user_name,
       user_full_name: dataForm.user_full_name,
       user_mobi: dataForm.user_mobi,
       user_email: dataForm.user_email,
       user_add: dataForm.user_add,
-      user_note: dataForm.user_note,
-      position_id: dataForm.position_id,
+      role: dataForm.role,
+      user_classify: dataForm.user_classify,
+      user_pass: dataForm.user_password
     };
 
     const apiResponse = await createUser(data);
     if (apiResponse) {
-      setStateCreateCustomer({ isShowModal: false, createUserSelected: null });
+      setStateCreateUser({ isShowModal: false, createUserSelected: null });
       message.success("Đã tạo người dùng mới thành công!");
       await getUser();
     }
@@ -148,10 +148,10 @@ function User({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{t("Quyền")}</div>,
       width: "15%",
-      dataIndex: "customerAdd",
+      dataIndex: "userClassify",
       align: "center",
       render: (value) => {
-        return <div align="left">{value}</div>;
+        return <div align="center">{value?.tenvaitro}</div>;
       },
     },
     {
@@ -184,7 +184,7 @@ function User({ myInfo }) {
     <>
       <CustomBreadcrumb breadcrumbLabel={"NGƯỜI DÙNG"}>
         <Row>
-          <Button type="primary" icon={<i className="fa fa-plus mr-1" />} onClick={handleShowModalCreateCustomer}>
+          <Button type="primary" icon={<i className="fa fa-plus mr-1" />} onClick={handleShowModalCreateUser}>
             {t("TAO_MOI")}
           </Button>
         </Row>
@@ -207,11 +207,11 @@ function User({ myInfo }) {
         />
       </Loading>
 
-      <CreateCustomer
-        isModalVisible={stateCreateCustomer.isShowModal}
-        handleOk={handleCreateCustomer}
-        handleCancel={() => setStateCreateCustomer({ isShowModal: false, createUserSelected: null })}
-        createUserSelected={stateCreateCustomer.createUserSelected}
+      <CreateUser
+        isModalVisible={stateCreateUser.isShowModal}
+        handleOk={handleCreateUser}
+        handleCancel={() => setStateCreateUser({ isShowModal: false, createUserSelected: null })}
+        createUserSelected={stateCreateUser.createUserSelected}
       />
     </>
   );

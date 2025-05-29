@@ -1,18 +1,18 @@
-import { put, select, takeLatest } from 'redux-saga/effects';
-import Cookies from 'js-cookie';
+import { put, select, takeLatest } from "redux-saga/effects";
+import Cookies from "js-cookie";
 
-import { message } from 'antd';
+import { message } from "antd";
 
-import { URL } from '@url';
+import { URL } from "@url";
 
-import { getUserByToken, updateMyInfo } from '@app/services/User';
-import { checkTokenExp } from '@app/common/functionCommons';
+import { getUserByToken, updateMyInfo } from "@app/services/User";
+import { checkTokenExp } from "@app/common/functionCommons";
 
 export const actionTypes = {
-  RequestUser: 'User/RequestUser',
-  UserLoaded: 'User/UserLoaded',
-  UpdateMyInfo: 'User/UpdateMyInfo',
-  ClearToken: 'App/ClearToken',
+  RequestUser: "User/RequestUser",
+  UserLoaded: "User/UserLoaded",
+  UpdateMyInfo: "User/UpdateMyInfo",
+  ClearToken: "App/ClearToken",
 };
 
 const initialState = {
@@ -24,7 +24,7 @@ export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.UserLoaded: {
       const { infoData } = action.payload;
-      infoData.role = 'admin';
+      // infoData.role = 'admin';
       return { ...state, myInfo: Object.assign({}, state.myInfo, infoData) };
     }
     default:
@@ -42,7 +42,7 @@ export const actions = {
 export function* saga() {
   yield takeLatest(actionTypes.RequestUser, function* requestUserSaga(data) {
     const { history } = data?.payload;
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     if (checkTokenExp(token)) {
       const dataResponse = yield getUserByToken();
       if (dataResponse) {
@@ -58,7 +58,8 @@ export function* saga() {
     if (dataResponse) {
       delete dataResponse.password;
       yield put(actions.userLoaded(dataResponse));
-      message.success('Cập nhật thông tin thành công');
+      message.success("Cập nhật thông tin thành công");
     }
   });
 }
+

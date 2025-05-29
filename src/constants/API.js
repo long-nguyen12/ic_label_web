@@ -91,7 +91,8 @@ export const API = {
   AVATAR: '/api/files/avatar/{0}',
 
   ALL_USER: '/api/users',
-  CREATE_USER: '/api/users',
+  CREATE_USER: '/api/users/',
+  GET_USER: '/api/users/{0}',
   UPDATE_USER: '/api/users/{0}',
   DELETE_USER: '/api/users/{1}',
 

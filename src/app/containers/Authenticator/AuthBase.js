@@ -10,7 +10,7 @@ function AuthBase({ children }) {
   return <div id="login">
     <div className="login-form">
       <div style={{ textAlign: 'center' }}>
-        <h2 style={{color:"#00199F"}}> <b> HỆ THỐNG QUẢN LÝ BÁN HÀNG   </b> </h2>
+        <h2 style={{color:"#00199F"}}> <b> HỆ THỐNG GÁN NHÃN HÌNH ẢNH   </b> </h2>
       </div>
       {children}
     </div>

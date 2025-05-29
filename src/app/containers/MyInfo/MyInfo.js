@@ -31,20 +31,15 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
     }
   }, [myInfo]);
 
-  function handleUpdateMyInfo({ userFullName, userEmail, userMobi, userBankAccountNumber,userTaxCode, userAdd , userBankAccountInfo, userDiscount }) {
+  function handleUpdateMyInfo({ userFullName, userEmail, userMobi, userAdd }) {
     const data = {
       user_name: myInfo.userName,
       user_full_name: userFullName,
       role: myInfo.role,
       user_email: userEmail,
       user_mobi: userMobi,
-      user_bank_account_number: userBankAccountNumber,
       user_tax_code: userTaxCode,
       user_add: userAdd,
-      user_bank_account_info: userBankAccountInfo,
-      user_discount: userDiscount
-
-
     };
     props.updateMyInfo(data);
   }
@@ -56,15 +51,12 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
       toast(CONSTANTS.ERROR, "Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    // if (oldPassword.length() == 0 || newPassword.length() == 0 || confirmPassword.length() == 0) {
-    //   toast(CONSTANTS.ERROR, "Không được để trống");
-    //   return;
-    // }
+
     const apiResponse = await requestChangePassword({ oldPassword, newPassword });
     if (apiResponse) {
       toast(CONSTANTS.SUCCESS, "Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại");
       formChangePassword.resetFields();
-      props.clearToken()
+      props.clearToken();
     }
   }
 
@@ -137,6 +129,15 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
                       rules={[RULES.REQUIRED]}
                       disabled={isLoading}
                       helpInline={false}
+                    />
+                    <CustomSkeleton
+                      size="default"
+                      label={"Quyền"}
+                      name="role"
+                      type={CONSTANTS.TEXT}
+                      labelCol={{ xs: 8 }}
+                      layoutCol={{ xs: 24 }}
+                      showInputLabel
                     />
                   </Row>
                 </Form>
@@ -242,3 +243,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, { ...app.actions, ...user.actions })(MyInfo);
+

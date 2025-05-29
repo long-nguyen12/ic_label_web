@@ -6,27 +6,23 @@ import CustomModal from "@components/CustomModal";
 import CustomSkeleton from "@components/CustomSkeleton";
 import { CONSTANTS, RULES } from "@constants";
 import { cloneObj } from "@app/common/functionCommons";
-// import { getAllLabels } from '@app/services/Customer';
 import { getAllPositionNoQuery } from "../../services/Position";
-import { getCustomerById } from "@app/services/Customer";
-import { getAllSalebillsByUserID } from "@app/services/Salebills";
-import { getAllProductNoQuery } from "@app/services/Product";
 import axios from "axios";
 const layoutCol = { xs: 24, md: 12, xl: 12, xxl: 12 };
 const labelCol = { xs: 24 };
 
-function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, createCustomerSelected, ...props }) {
-  const [formCreateCustomer] = Form.useForm();
+function CreateUser({ myInfo, isModalVisible, handleOk, handleCancel, createUserSelected, ...props }) {
+  const [formCreateUser] = Form.useForm();
   const [listPosition, setlistPosition] = useState([]);
   const { t } = useTranslation();
 
   useEffect(() => {
     getData();
     if (isModalVisible) {
-      formCreateCustomer.resetFields();
-      if (createCustomerSelected) {
-        const dataField = cloneObj(createCustomerSelected);
-        formCreateCustomer.setFieldsValue(dataField);
+      formCreateUser.resetFields();
+      if (createUserSelected) {
+        const dataField = cloneObj(createUserSelected);
+        formCreateUser.setFieldsValue(dataField);
       }
     }
   }, [isModalVisible]);
@@ -39,17 +35,25 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
   }
 
   function onFinish(data) {
+    if (data?.userRole !== undefined || data?.userRole !== null) {
+      data.userClassify = data.userRole;
+      let roleName = listPosition.filter((item) => {
+        if (item._id === data.userRole) {
+          return item.tenvaitro;
+        }
+      });
+      data.role = roleName[0].tenvaitro;
+      delete data.userRole;
+    }
     const newData = {
-      user_full_name: data.customerFullName,
-      user_mobi: data.customerMobi,
-      user_email: data.customerEmail,
-      user_add: data.customerAddress,
-      user_bank_account_number: data.customerBankAccountNumber,
-      user_bank_account_info: data.customerBankAccountInfo,
-      user_tax_code: data.customerTaxCode,
-      user_note: data.customerBankAccountNote,
-      position_id: data.positionId,
-      user_discount: data.customerDiscount,
+      user_name: data.userName,
+      user_full_name: data.userFullName,
+      user_mobi: data.userMobi,
+      user_email: data.userEmail,
+      user_add: data.userAddress,
+      role: data.role,
+      user_classify: data.userClassify,
+      user_password: "123456", // default password
     };
     if (props.isLoading) return;
     handleOk(newData);
@@ -58,7 +62,7 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
     let arrConvert = [];
     list.map((data) => {
       let objConvert = {};
-      objConvert.label = data.positionName;
+      objConvert.label = data.tenvaitro;
       objConvert.value = data._id;
       arrConvert.push(objConvert);
     });
@@ -66,12 +70,12 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
   }
 
   function onChangeForm(fieldSelected, dataSelected) {
-    if (fieldSelected["positionId"]) {
-      let _idSelected = fieldSelected["positionId"];
+    if (fieldSelected["userRole"]) {
+      let _idSelected = fieldSelected["userRole"];
       listPosition.map((data) => {
         if (data._id === _idSelected) {
-          formCreateCustomer.setFieldsValue({
-            customerDiscount: data.positionDiscount,
+          formCreateUser.setFieldsValue({
+            role: data.userRole,
           });
         }
       });
@@ -92,58 +96,67 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
       >
         <Form
           id="form-modal"
-          form={formCreateCustomer}
+          form={formCreateUser}
           onFinish={onFinish}
           onValuesChange={(fieldSelected, dataSelected) => onChangeForm(fieldSelected, dataSelected)}
         >
           <Row gutter={15}>
             <CustomSkeleton
-              label={t("Tên người dùng")}
-              name="customerFullName"
+              label={t("Tên đăng nhập")}
+              name="userName"
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
               rules={[RULES.REQUIRED]}
-              form={formCreateCustomer}
+              form={formCreateUser}
+            />
+            <CustomSkeleton
+              label={t("Tên người dùng")}
+              name="userFullName"
+              layoutCol={layoutCol}
+              labelCol={labelCol}
+              type={CONSTANTS.TEXT}
+              rules={[RULES.REQUIRED]}
+              form={formCreateUser}
             />
             <CustomSkeleton
               label={t("Điện thoại")}
-              name="customerMobi"
+              name="userMobi"
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
               rules={[RULES.REQUIRED]}
-              form={formCreateCustomer}
+              form={formCreateUser}
             />
             {listPosition && (
               <CustomSkeleton
                 label={"Chọn chức vụ"}
-                name="positionId"
+                name="userRole"
                 layoutCol={layoutCol}
                 labelCol={labelCol}
                 options={convertDataSelect(listPosition)}
                 type={CONSTANTS.SELECT}
                 rules={[RULES.REQUIRED]}
-                form={formCreateCustomer}
+                form={formCreateUser}
               />
             )}
             <CustomSkeleton
               label={t("Địa chỉ")}
-              name="customerAddress"
+              name="userAddress"
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
               rules={[RULES.REQUIRED]}
-              form={formCreateCustomer}
+              form={formCreateUser}
             />
             <CustomSkeleton
               label={t("Email")}
-              name="customerEmail"
+              name="userEmail"
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
               // rules={[RULES.REQUIRED, RULES.EMAIL]}
-              form={formCreateCustomer}
+              form={formCreateUser}
             />
             <CustomSkeleton label={t()} />
           </Row>
@@ -159,4 +172,5 @@ function mapStateToProps(store) {
   return { isLoading, myInfo };
 }
 
-export default connect(mapStateToProps)(CreateCustomer);
+export default connect(mapStateToProps)(CreateUser);
+

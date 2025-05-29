@@ -1,9 +1,4 @@
-import {
-  CheckIcon,
-  FileIcon,
-  UserIcon,
-  HomeIcon,
-} from "@app/components/Icons";
+import { CheckIcon, FileIcon, UserIcon, HomeIcon } from "@app/components/Icons";
 import Information from "@containers/Information";
 import Position from "@containers/Position";
 import PositionDetail from "@containers/Position/PositionDetail/PositionDetail";
@@ -62,7 +57,7 @@ export const ConstantsRoutes = [
     component: User,
     icon: renderIcon(<UserIcon />),
     permission: ["admin"],
-    children: [{ path: URL.USER_MANAGEMENT_ID.format(":id"), component: UserDetail, permission: [] }],
+    children: [{ path: URL.USER_MANAGEMENT_ID.format(":id"), component: UserDetail, permission: ["admin"] }],
   },
   {
     path: URL.POSITION,
@@ -124,3 +119,4 @@ export const ConstantsRoutes = [
   // not render in menu
   { path: URL.MY_INFO, breadcrumbName: "Thông tin cá nhân", component: MyInfo, permission: [] },
 ];
+

@@ -6,7 +6,7 @@ import {
   convertSnakeCaseToCamelCase,
   renderMessageError,
 } from "@app/common/functionCommons";
-import { deleteByIdBase, getAllPaginationBase } from "@app/services/Base";
+import { deleteByIdBase, getAllPaginationBase, getByIdBase } from "@app/services/Base";
 
 export function login(data) {
   return axios
@@ -66,7 +66,20 @@ export function updateMyInfo(dataUpdate) {
 
 export function createUser(data) {
   return axios
-    .post(API.USERS, data)
+    .post(API.CREATE_USER, data)
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+export function getUserById(id) {
+  return axios
+    .get(API.GET_USER.format(id))
     .then((response) => {
       if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
       return null;
@@ -79,7 +92,7 @@ export function createUser(data) {
 
 export function updateUserById(id, dataForm) {
   return axios
-    .put(API.USER_ID.format(id), dataForm)
+    .put(API.UPDATE_USER.format(id), dataForm)
     .then((response) => {
       if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
       return null;
@@ -91,7 +104,7 @@ export function updateUserById(id, dataForm) {
 }
 
 export function deleteUserById(id) {
-  return deleteByIdBase(API.USER_ID, id);
+  return deleteByIdBase(API.DELETE_USER, id);
 }
 
 export function requestResetPassword(token, data) {
@@ -142,13 +155,15 @@ export function requestForgetPassword(data) {
 }
 
 export function getAccessToken(refreshToken) {
-  return axios.post(API.REFRESH_TOKEN, { 'refreshToken': refreshToken })
-    .then(response => {
+  return axios
+    .post(API.REFRESH_TOKEN, { refreshToken: refreshToken })
+    .then((response) => {
       if (response?.status === 200) return response?.data;
       return null;
     })
     .catch((err) => {
-      console.log('err',err);
+      console.log("err", err);
       return null;
     });
 }
+

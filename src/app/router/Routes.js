@@ -25,6 +25,7 @@ function Routes({ token, myInfo, ...props }) {
 
     let routeReturn = [];
     if (path) {
+        console.log(`Render route: ${path}`, checkPermission(myInfo.role, path));
       if (checkPermission(myInfo.role, path)) {
         routeReturn = [...routeReturn, <Route exact path={path} component={component} key={path}/>];
         routeReturn = [...routeReturn, ...renderSubItem(children)];

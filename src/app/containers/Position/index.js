@@ -99,21 +99,21 @@ function Position({ myInfo }) {
 
   const columnsPosition = [
     {
-      title: <div style={{ textTransform: "capitalize" }}>{"Tên chức vụ"}</div>,
-      dataIndex: "positionName",
+      title: <div style={{ textTransform: "capitalize" }}>{"Tên vai trò"}</div>,
+      dataIndex: "tenvaitro",
       width: "15%",
       align: "center",
       render: (value) => {
-        return <div align="left">{value}</div>;
+        return <div align="center">{value}</div>;
       },
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{t("MO_TA")}</div>,
       width: "20%",
-      dataIndex: "positionDescription",
+      dataIndex: "tenvaitro",
       align: "center",
       render: (value) => {
-        return <div align="left">{value}</div>;
+        return <div align="center">{value}</div>;
       },
     },
     {
@@ -134,7 +134,7 @@ function Position({ myInfo }) {
             }}
           >
             <Button type="primary" ghost>
-              {t("XEM")}
+              {t("XOA")}
             </Button>
           </NavLink>
         );
