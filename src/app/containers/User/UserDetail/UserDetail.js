@@ -124,7 +124,6 @@ function UserDetail({ myInfo }) {
     <>
       {isMobile ? (
         <Col>
-          <CustomBreadcrumb breadcrumbLabel={"CHI TIẾT NGƯỜI DÙNG"}></CustomBreadcrumb>
           <Row>
             <Button
               className="mr-2"

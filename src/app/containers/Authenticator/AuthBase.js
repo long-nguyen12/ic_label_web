@@ -3,8 +3,6 @@ import { Space, Typography } from 'antd';
 const { Text, Link } = Typography;
 import './AuthBase.scss';
 
-import LOGO_VERTICAL from '@assets/images/logo/THINKLABS-LOGO.svg';
-
 function AuthBase({ children }) {
 
   return <div id="login">
