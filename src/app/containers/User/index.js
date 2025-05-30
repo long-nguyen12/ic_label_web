@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
-import { Button, message, Row, Table, Tag } from "antd";
+import { Button, message, Row, Table, Tag, Popconfirm } from "antd";
 import { CheckCircleOutlined, MobileOutlined, MailOutlined } from "@ant-design/icons";
 
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import Loading from "@components/Loading";
 import { createUser } from "@app/services/User";
 import Filter from "@components/Filter";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 
 import {
   convertQueryToObject,
@@ -18,7 +19,7 @@ import {
 import CreateUser from "@containers/User/CreateUser";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
-import { getAllUser } from "../../services/User";
+import { deleteUserById, getAllUser } from "../../services/User";
 
 function User({ myInfo }) {
   let history = useHistory();
@@ -64,7 +65,6 @@ function User({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllUser(page, limit, query);
     if (apiResponse) {
-      console.log("apiResponse", apiResponse);
       setUsers({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -106,6 +106,18 @@ function User({ myInfo }) {
     setLoading(false);
   }
 
+  async function handleDelete(id) {
+    setLoading(true);
+    const apiResponse = await deleteUserById(id);
+    if (apiResponse) {
+      message.success("Xoá người dùng thành công!");
+      await getUser(users.currentPage, users.pageSize, users.query);
+    } else {
+      message.error(apiResponse.message || "Xoá người dùng thất bại!");
+    }
+    setLoading(false);
+  }
+
   const columnsUser = [
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Tên người dùng"}</div>,
@@ -134,7 +146,7 @@ function User({ myInfo }) {
       },
     },
     {
-      title: <div style={{ textTransform: "capitalize" }}>{"Địa chỉ Email"}</div>,
+      title: <div style={{ textTransform: "capitalize" }}>{"Email"}</div>,
       dataIndex: "userEmail",
       width: "15%",
       align: "center",
@@ -148,7 +160,7 @@ function User({ myInfo }) {
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{t("Quyền")}</div>,
-      width: "15%",
+      width: "10%",
       dataIndex: "role",
       align: "center",
       render: (value) => {
@@ -160,26 +172,66 @@ function User({ myInfo }) {
       },
     },
     {
+      title: <div style={{ textTransform: "capitalize" }}>{"Trạng thái"}</div>,
+      dataIndex: "active",
+      width: "10%",
+      align: "center",
+      render: (value, record) => {
+        if (value) {
+          return (
+            <Tag color="green">
+              <Row align="middle" justify="center">
+                <CheckCircleOutlined style={{ fontSize: 15 }} className="mr-1" align="center" />
+                <div align="center">{t("Kích hoạt")}</div>
+              </Row>
+            </Tag>
+          );
+        } else {
+          return (
+            <Tag color="red">
+              <Row align="middle" justify="center">
+                <i className="fa fa-ban mr-1" style={{ fontSize: 15 }} align="center" />
+                <div align="center">{t("Không kích hoạt")}</div>
+              </Row>
+            </Tag>
+          );
+        }
+      },
+    },
+    {
       title: <div style={{ textTransform: "capitalize" }}>{t("THAO_TAC")}</div>,
       key: "action",
       align: "center",
-      width: "10%",
+      width: "20%",
       fixed: "right",
       render: (record) => {
         return (
-          <NavLink
-            to={{
-              pathname: "/user/" + record._id,
-              aboutProps: {
-                id: record._id,
-                name: record.customerName,
-              },
-            }}
-          >
-            <Button type="primary" ghost>
-              {t("XEM")}
-            </Button>
-          </NavLink>
+          <Row align="center">
+            <NavLink
+              to={{
+                pathname: "/user/" + record._id,
+                aboutProps: {
+                  id: record._id,
+                  name: record.userName,
+                },
+              }}
+            >
+              <Button type="primary" ghost icon={<EyeOutlined style={{ fontSize: 15 }} />} className="mr-1">
+                {t("XEM")}
+              </Button>
+            </NavLink>
+            <Popconfirm
+              title={t("Xoá người dùng này?")}
+              onConfirm={() => handleDelete(record._id)}
+              okText={t("XOA")}
+              cancelText={t("HUY")}
+              okButtonProps={{ type: "danger" }}
+            >
+              <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
+                {t("Xoá")}
+              </Button>
+            </Popconfirm>
+          </Row>
         );
       },
     },

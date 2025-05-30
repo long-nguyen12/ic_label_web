@@ -155,7 +155,7 @@ function CreateUser({ myInfo, isModalVisible, handleOk, handleCancel, createUser
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
-              // rules={[RULES.REQUIRED, RULES.EMAIL]}
+              rules={[RULES.REQUIRED, RULES.EMAIL]}
               form={formCreateUser}
             />
             <CustomSkeleton label={t()} />

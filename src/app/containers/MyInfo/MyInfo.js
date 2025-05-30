@@ -22,6 +22,7 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
     if (myInfo) {
       const dataField = cloneObj(myInfo);
       formInfo.setFieldsValue(dataField);
+      console.log("myInfo", myInfo);
       if (myInfo.active === USER_STATUS.ACTIVE.code) formInfo.setFieldsValue({ active: USER_STATUS.ACTIVE.label });
       if (myInfo.active === USER_STATUS.INACTIVE.code) formInfo.setFieldsValue({ active: USER_STATUS.INACTIVE.label });
       formInfo.setFieldsValue({ username: myInfo.username, workAddress: myInfo.workAddress });
@@ -134,6 +135,15 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
                       size="default"
                       label={"Quyền"}
                       name="role"
+                      type={CONSTANTS.TEXT}
+                      labelCol={{ xs: 8 }}
+                      layoutCol={{ xs: 24 }}
+                      showInputLabel
+                    />
+                    <CustomSkeleton
+                      size="default"
+                      label={"Trạng thái"}
+                      name="active"
                       type={CONSTANTS.TEXT}
                       labelCol={{ xs: 8 }}
                       layoutCol={{ xs: 24 }}

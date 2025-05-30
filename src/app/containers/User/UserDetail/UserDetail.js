@@ -11,7 +11,7 @@ import { getAllPositionNoQuery } from "@app/services/Position";
 import { CONSTANTS, SHARE_PERMISSION, RULES } from "@constants";
 import { URL } from "@url";
 import { useTranslation } from "react-i18next";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EyeInvisibleOutlined, RedoOutlined, EyeOutlined } from "@ant-design/icons";
 import "./UserDetail.scss";
 import Loading from "@components/Loading";
 import Filter from "@components/Filter";
@@ -89,11 +89,23 @@ function UserDetail({ myInfo }) {
       data.role = roleName[0].tenvaitro;
       delete data.userRole;
     }
-    console.log("data", data);
     const api = await updateUserById(id, convertCamelCaseToSnakeCase(data));
     if (api) {
       toast(CONSTANTS.SUCCESS, "Cập nhật dữ liệu thành công!");
     }
+  }
+
+  async function handleDeactiveUser() {
+    setLoading(true);
+    const api = await updateUserById(id, { active: !userDetail.active });
+    if (api) {
+      toast(
+        CONSTANTS.SUCCESS,
+        userDetail?.active ? "Huỷ kích hoạt người dùng thành công" : "Kích hoạt người dùng thành công!"
+      );
+      getData();
+    }
+    setLoading(false);
   }
 
   function convertDataSelect(list) {
@@ -136,14 +148,23 @@ function UserDetail({ myInfo }) {
             </Button>
             {myInfo.role === CONSTANTS.ADMIN && (
               <Popconfirm
-                title={t("Xoá người dùng")}
-                onConfirm={handleDelete}
-                okText={t("XOA")}
+                title={t(userDetail?.active ? "Huỷ kích hoạt người dùng này?" : "Kích hoạt người dùng này?")}
+                onConfirm={handleDeactiveUser}
+              okText={t("Xác nhận")}
                 cancelText={t("HUY")}
                 okButtonProps={{ type: "danger" }}
               >
-                <Button danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-                  {t("Xoá người dùng")}
+                <Button
+                  danger
+                  icon={
+                    userDetail?.active ? (
+                      <EyeInvisibleOutlined style={{ fontSize: 15 }} />
+                    ) : (
+                      <EyeOutlined style={{ fontSize: 15 }} />
+                    )
+                  }
+                >
+                  {t(userDetail?.active ? "Huỷ kích hoạt" : "Kích hoạt")}
                 </Button>
               </Popconfirm>
             )}
@@ -162,14 +183,23 @@ function UserDetail({ myInfo }) {
           </Button>
           {myInfo.role === CONSTANTS.ADMIN && (
             <Popconfirm
-              title={t("Xoá người dùng")}
-              onConfirm={handleDelete}
-              okText={t("XOA")}
+              title={t(userDetail?.active ? "Huỷ kích hoạt người dùng này?" : "Kích hoạt người dùng này?")}
+              onConfirm={handleDeactiveUser}
+              okText={t("Xác nhận")}
               cancelText={t("HUY")}
               okButtonProps={{ type: "danger" }}
             >
-              <Button danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-                {t("Xoá người dùng")}
+              <Button
+                danger
+                icon={
+                  userDetail?.active ? (
+                    <EyeInvisibleOutlined style={{ fontSize: 15 }} />
+                  ) : (
+                    <EyeOutlined style={{ fontSize: 15 }} />
+                  )
+                }
+              >
+                {t(userDetail?.active ? "Huỷ kích hoạt" : "Kích hoạt")}
               </Button>
             </Popconfirm>
           )}
@@ -244,8 +274,17 @@ function UserDetail({ myInfo }) {
                 form={formCreateUser}
               />
             </Row>
-            <Row gutter={24} className="mt-3">
-              <Button size="default" type="primary" htmlType="submit" className="btn">
+            <Row gutter={24} className="m-1" align="middle" justify="space-between">
+              <Button
+                size="default"
+                type="primary"
+                className="mr-2"
+                icon={<RedoOutlined style={{ fontSize: 15 }} />}
+                onClick={() => formCreateUser.resetFields()}
+              >
+                Cấp lại mật khẩu
+              </Button>
+              <Button size="default" type="primary" htmlType="submit">
                 <i className="fa fa-save mr-1"></i>
                 Lưu
               </Button>

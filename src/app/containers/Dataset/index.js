@@ -64,7 +64,6 @@ function Dataset({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllUser(page, limit, query);
     if (apiResponse) {
-      console.log("apiResponse", apiResponse.docs);
       setUsers({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -182,7 +181,7 @@ function Dataset({ myInfo }) {
 
   return (
     <>
-      <CustomBreadcrumb breadcrumbLabel={"NGƯỜI DÙNG"}>
+      <CustomBreadcrumb breadcrumbLabel={"DATASET"}>
       </CustomBreadcrumb>
       <Loading active={loading} layoutBackground>
         <Filter

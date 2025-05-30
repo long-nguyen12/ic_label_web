@@ -94,7 +94,7 @@ export const API = {
   CREATE_USER: '/api/users/',
   GET_USER: '/api/users/{0}',
   UPDATE_USER: '/api/users/{0}',
-  DELETE_USER: '/api/users/{1}',
+  DELETE_USER: '/api/users/{0}',
 
   ALL_SALE_BILLS: '/api/salebills',
   ALL_SALE_BILLS_EXPORT: '/api/report/export',
