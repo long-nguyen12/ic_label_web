@@ -17,24 +17,6 @@ export function getAll(query) {
     });
 }
 
-export function getAllSalebillsByUserID(currentPage = 1, totalDocs = 0, params) {
-  let query = "";
-  query += params.timeStart ? `&sale_date[from]=${convertDigitIn(params.timeStart)}` : "";
-  query += params.timeEnd ? `&sale_date[to]=${convertDigitIn(params.timeEnd)}` : "";
-  query += params.customerId ? `&customer_id=${params.customerId}` : "";
-
-  return axios
-    .get(`${API.ALL_SALE_BILLS}?page=${currentPage}&limit=${totalDocs}${query}`, { loading: true })
-    .then((response) => {
-      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
-      return null;
-    })
-    .catch((err) => {
-      renderMessageError(err);
-      return null;
-    });
-}
-
 export function exportReportQuery(currentPage = 1, totalDocs = 0, params) {
   let query = "";
   query += params.timeStart ? `&sale_date[from]=${convertDigitIn(params.timeStart)}` : "";

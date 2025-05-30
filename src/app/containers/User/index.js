@@ -39,8 +39,8 @@ function User({ myInfo }) {
   });
 
   let dataSearch = [
-    { name: "search", label: t("Tên người dùng"), type: CONSTANTS.TEXT },
-    { name: "user_mobi", label: t("Điện thoại"), type: CONSTANTS.TEXT },
+    { name: "user_name", label: t("Tên người dùng"), type: CONSTANTS.TEXT },
+    { name: "user_email", label: t("Email"), type: CONSTANTS.TEXT },
   ];
 
   useEffect(() => {
