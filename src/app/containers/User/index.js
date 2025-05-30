@@ -64,6 +64,7 @@ function User({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllUser(page, limit, query);
     if (apiResponse) {
+      console.log("apiResponse", apiResponse);
       setUsers({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -93,7 +94,7 @@ function User({ myInfo }) {
       user_add: dataForm.user_add,
       role: dataForm.role,
       user_classify: dataForm.user_classify,
-      user_pass: dataForm.user_password
+      user_pass: dataForm.user_password,
     };
 
     const apiResponse = await createUser(data);
@@ -148,10 +149,14 @@ function User({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{t("Quyền")}</div>,
       width: "15%",
-      dataIndex: "userClassify",
+      dataIndex: "role",
       align: "center",
       render: (value) => {
-        return <div align="center">{value?.tenvaitro}</div>;
+        return (
+          <Tag color="magenta">
+            <div align="center">{value}</div>
+          </Tag>
+        );
       },
     },
     {
@@ -223,3 +228,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps)(User);
+

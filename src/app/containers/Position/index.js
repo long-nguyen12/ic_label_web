@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
-import { Button, message, Row, Table, Tag } from "antd";
+import { Button, message, Row, Table, Popconfirm } from "antd";
 
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import Loading from "@components/Loading";
 import { createPosition, getAllPosition } from "@app/services/Position";
 import Filter from "@components/Filter";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 
-import {
-  convertQueryToObject,
-  handleReplaceUrlSearch,
-  paginationConfig,
-} from "@app/common/functionCommons";
+import { convertQueryToObject, handleReplaceUrlSearch, paginationConfig, toast } from "@app/common/functionCommons";
 import CreatePosition from "@containers/Position/CreatePosition";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
 import { uploadImages } from "../../services/File";
+import { deletePosition } from "../../services/Position";
 
 function Position({ myInfo }) {
   let history = useHistory();
@@ -59,6 +57,7 @@ function Position({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllPosition(page, limit, query);
     if (apiResponse) {
+      console.log("apiResponse", apiResponse);
       setPositions({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -76,6 +75,16 @@ function Position({ myInfo }) {
 
   async function handleFilter(query) {
     await getPosition(1, positions.pageSize, query);
+  }
+
+  async function handleDelete(id) {
+    const apiResponse = await deletePosition(id);
+    if (apiResponse) {
+      toast(CONSTANTS.SUCCESS, "Xoá chức vụ thành công!");
+      await getPosition(positions.currentPage, positions.pageSize, positions.query);
+    } else {
+      toast(CONSTANTS.ERROR, apiResponse.message);
+    }
   }
 
   async function handleCreatePosition(dataForm) {
@@ -101,7 +110,7 @@ function Position({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Tên vai trò"}</div>,
       dataIndex: "tenvaitro",
-      width: "15%",
+      width: "40%",
       align: "center",
       render: (value) => {
         return <div align="center">{value}</div>;
@@ -109,8 +118,8 @@ function Position({ myInfo }) {
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{t("MO_TA")}</div>,
-      width: "20%",
-      dataIndex: "tenvaitro",
+      width: "30%",
+      dataIndex: "mota",
       align: "center",
       render: (value) => {
         return <div align="center">{value}</div>;
@@ -120,23 +129,36 @@ function Position({ myInfo }) {
       title: <div style={{ textTransform: "capitalize" }}>{t("THAO_TAC")}</div>,
       key: "action",
       align: "center",
-      width: "15%",
+      width: "30%",
       fixed: "right",
       render: (record) => {
         return (
-          <NavLink
-            to={{
-              pathname: "/position/" + record._id,
-              aboutProps: {
-                id: record._id,
-                name: record.positionName,
-              },
-            }}
-          >
-            <Button type="primary" ghost>
-              {t("XOA")}
-            </Button>
-          </NavLink>
+          <Row align="center">
+            <NavLink
+              to={{
+                pathname: "/position/" + record._id,
+                aboutProps: {
+                  id: record._id,
+                  name: record.tenvaitro,
+                },
+              }}
+            >
+              <Button type="primary" ghost icon={<EyeOutlined style={{ fontSize: 15 }} />} className="mr-1">
+                {t("XEM")}
+              </Button>
+            </NavLink>
+            <Popconfirm
+              title={t("Xoá vai trò này?")}
+              onConfirm={() => handleDelete(record._id)}
+              okText={t("XOA")}
+              cancelText={t("HUY")}
+              okButtonProps={{ type: "danger" }}
+            >
+              <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
+                {t("Xoá")}
+              </Button>
+            </Popconfirm>
+          </Row>
         );
       },
     },
@@ -185,3 +207,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps)(Position);
+

@@ -15,6 +15,7 @@ export const URL = {
     INFOMATION: '/infomation',
     DATASET: '/dataset',
     DATASET_MANAGEMENT: '/dataset-management',
+    HISTORY: '/history',
   },
   MY_INFO: '/my-info',
 

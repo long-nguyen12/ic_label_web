@@ -14,6 +14,7 @@ const Statistic = lazy(() => import("@containers/Statistic/index"));
 import { InboxOutlined } from "@ant-design/icons";
 import Dashboard from "../containers/Dashboard";
 import Dataset from "../containers/Dataset";
+import History from "../containers/History";
 
 function renderIcon(icon) {
   return (
@@ -73,41 +74,13 @@ export const ConstantsRoutes = [
     ],
     permission: [],
   },
-  // {
-  //   path: URL.MENU.OPPOSITE,
-  //   menuName: "HOA_DON_BAN_HANG",
-  //   component: Salebills,
-  //   icon: renderIcon(<OrgUnitIcon />),
-  //   permission: [],
-  //   children: [
-  //     {
-  //       path: URL.SALE_BILLS_ADD,
-  //       component: SalebillsAdd,
-  //       permission: [],
-  //     },
-  //     {
-  //       path: URL.SALE_BILLS_ID.format(":id"),
-  //       component: SalebillsDetail,
-  //       permission: [],
-  //     },
-  //   ],
-  // },
-
-  // {
-  //   path: URL.MENU.ACCOUNT,
-  //   menuName: "QUAN_LY_TAI_KHOAN",
-  //   component: Account,
-  //   icon: renderIcon(<UserIcon />),
-  //   permission: [],
-  // },
-  // {
-  //   path: URL.MENU.DASHBOARD,
-  //   menuName: "Thống kê, báo cáo",
-  //   component: Statistic,
-  //   icon: renderIcon(<ListIcon />),
-  //   permission: [],
-  // },
-
+  {
+    path: URL.MENU.HISTORY,
+    menuName: "Lịch sử hoạt động",
+    component: History,
+    icon: renderIcon(<CheckIcon />),
+    permission: [],
+  },
   {
     path: URL.MENU.INFOMATION,
     menuName: "Thông tin phần mềm",
