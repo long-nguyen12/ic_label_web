@@ -57,7 +57,6 @@ function Position({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllPosition(page, limit, query);
     if (apiResponse) {
-      console.log("apiResponse", apiResponse);
       setPositions({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -88,12 +87,9 @@ function Position({ myInfo }) {
   }
 
   async function handleCreatePosition(dataForm) {
-    if (dataForm && dataForm.position_image) {
-      position_images = await uploadImages(dataForm.position_image);
-    }
-
     let data = {
       tenvaitro: dataForm.position_name,
+      mota: dataForm.position_description,
     };
 
     const apiResponse = await createPosition(data);

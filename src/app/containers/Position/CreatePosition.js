@@ -31,7 +31,6 @@ function CreatePosition({ myInfo, isModalVisible, handleOk, handleCancel, create
     const newData = {
       position_name: data.positionName,
       position_description: data.positionDescription ? data.positionDescription : "",
-      position_discount: data.positionDiscount,
     };
     if (props.isLoading) return;
     handleOk(newData);

@@ -15,7 +15,6 @@ import {
 } from "@app/common/functionCommons";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
-import { getAllUser } from "../../services/User";
 import { getAllHistory } from "../../services/History";
 
 function History({ myInfo }) {
@@ -43,8 +42,8 @@ function History({ myInfo }) {
     handleReplaceUrlSearch(history, page, limit, query);
     setLoading(true);
     const apiResponse = await getAllHistory(page, limit, query);
-    console.log("apiResponse", apiResponse);
     if (apiResponse) {
+      console.log("apiResponse", apiResponse);
       setUsers({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -76,20 +75,21 @@ function History({ myInfo }) {
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Người sử dụng"}</div>,
-      dataIndex: "userName",
+      dataIndex: "userId",
       width: "15%",
       align: "center",
       render: (value, record) => {
+        console.log("value", value);  
         return (
           <>
-            <div align="center">{value}</div>
+            <div align="center">{value?.userFullName}</div>
           </>
         );
       },
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Hành động"}</div>,
-      dataIndex: "userEmail",
+      dataIndex: "tieude",
       width: "70%",
       align: "center",
       render: (value, record) => {
