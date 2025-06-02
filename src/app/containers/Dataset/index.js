@@ -15,7 +15,7 @@ import {
   handleReplaceUrlSearch,
   paginationConfig,
 } from "@app/common/functionCommons";
-import CreateCustomer from "@containers/User/CreateUser";
+import CreateCustomer from "@containers/Dataset/CreateUser";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
 import { getAllUser } from "../../services/User";
@@ -179,9 +179,18 @@ function Dataset({ myInfo }) {
     },
   ];
 
+  async function handleShowModalCreateDataset() {
+    setStateCreateCustomer({ isShowModal: true, createUserSelected: null });
+  }
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"DATASET"}>
+      <Row>
+                <Button type="primary" icon={<i className="fa fa-plus mr-1" />} onClick={handleShowModalCreateDataset}>
+                  {t("TAO_MOI")}
+                </Button>
+              </Row>
       </CustomBreadcrumb>
       <Loading active={loading} layoutBackground>
         <Filter

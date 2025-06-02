@@ -38,19 +38,20 @@ export const ConstantsRoutes = [
     icon: renderIcon(<HomeIcon />),
     permission: [],
   },
-  {
-    path: URL.MENU.DATASET,
-    menuName: "Tải lên dataset",
-    component: UploadScreen,
-    icon: renderIcon(<FileIcon />),
-    permission: [],
-  },
+  // {
+  //   path: URL.MENU.DATASET,
+  //   menuName: "Tải lên dataset",
+  //   component: UploadScreen,
+  //   icon: renderIcon(<FileIcon />),
+  //   permission: [],
+  // },
   {
     path: URL.MENU.DATASET_MANAGEMENT,
     menuName: "Quản lý dataset",
     component: Dataset,
     icon: renderIcon(<FileIcon />),
     permission: [],
+    children: [{ path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: UserDetail, permission: ["admin"] }],
   },
   {
     path: URL.USER_MANAGEMENT,

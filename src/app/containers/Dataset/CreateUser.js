@@ -8,12 +8,33 @@ import { CONSTANTS, RULES } from "@constants";
 import { cloneObj } from "@app/common/functionCommons";
 // import { getAllLabels } from '@app/services/Customer';
 import { getAllPositionNoQuery } from "../../services/Position";
-import { getCustomerById } from "@app/services/Customer";
-import { getAllSalebillsByUserID } from "@app/services/Salebills";
-import { getAllProductNoQuery } from "@app/services/Product";
+import { InboxOutlined } from "@ant-design/icons";
 import axios from "axios";
 const layoutCol = { xs: 24, md: 12, xl: 12, xxl: 12 };
 const labelCol = { xs: 24 };
+
+const { Dragger } = Upload;
+
+const props = {
+  name: "file",
+  multiple: false,
+  // action: API.API_HOST + API.FILE,
+  onChange(info) {
+    const { status } = info.file;
+    if (status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+    if (status === "done") {
+      message.success(`${info.file.name} file đã được upload thành công.`);
+    }
+    if (status === "error") {
+      message.error(`${info.file.name} file tồn tại.`);
+    }
+  },
+  onDrop(e) {
+    console.log("Dropped files", e.dataTransfer.files);
+  },
+};
 
 function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, createCustomerSelected, ...props }) {
   const [formCreateCustomer] = Form.useForm();
@@ -78,6 +99,37 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
     }
   }
 
+  const handleUpload = async (options) => {
+    // const { file, onSuccess, onError, onProgress } = options;
+
+    // try {
+    //   const formData = new FormData();
+    //   formData.append("file", file);
+
+    //   const config = {
+    //     headers: {
+    //       "content-type": "multipart/form-data",
+    //     },
+    //     onUploadProgress: (progressEvent) => {
+    //       // Calculate percentage of file upload progress
+    //       const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+    //       // Call onProgress callback to update progress
+    //       onProgress({ percent: percentCompleted });
+    //     },
+    //   };
+
+    //   // Make a POST request to the server with the file
+    //   const response = await request.post(API.FILE, formData, config);
+
+    //   // If the request is successful, call onSuccess callback
+    //   onSuccess(response.data, file);
+    // } catch (error) {
+    //   // If there's an error, call onError callback
+    //   // console.log("error",error)
+    //   onError(error);
+    // }
+  };
+
   return (
     <>
       <CustomModal
@@ -98,8 +150,8 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
         >
           <Row gutter={15}>
             <CustomSkeleton
-              label={t("Tên người dùng")}
-              name="customerFullName"
+              label={t("Tên bộ dữ liệu")}
+              name="datasetName"
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
@@ -107,45 +159,29 @@ function CreateCustomer({ myInfo, isModalVisible, handleOk, handleCancel, create
               form={formCreateCustomer}
             />
             <CustomSkeleton
-              label={t("Điện thoại")}
-              name="customerMobi"
+              label={t("Mô tả")}
+              name="datasetNote"
               layoutCol={layoutCol}
               labelCol={labelCol}
               type={CONSTANTS.TEXT}
               rules={[RULES.REQUIRED]}
               form={formCreateCustomer}
             />
-            {listPosition && (
-              <CustomSkeleton
-                label={"Chọn chức vụ"}
-                name="positionId"
-                layoutCol={layoutCol}
-                labelCol={labelCol}
-                options={convertDataSelect(listPosition)}
-                type={CONSTANTS.SELECT}
-                rules={[RULES.REQUIRED]}
-                form={formCreateCustomer}
-              />
-            )}
-            <CustomSkeleton
-              label={t("Địa chỉ")}
-              name="customerAddress"
-              layoutCol={layoutCol}
-              labelCol={labelCol}
-              type={CONSTANTS.TEXT}
-              rules={[RULES.REQUIRED]}
-              form={formCreateCustomer}
-            />
-            <CustomSkeleton
-              label={t("Email")}
-              name="customerEmail"
-              layoutCol={layoutCol}
-              labelCol={labelCol}
-              type={CONSTANTS.TEXT}
-              // rules={[RULES.REQUIRED, RULES.EMAIL]}
-              form={formCreateCustomer}
-            />
-            <CustomSkeleton label={t()} />
+            <Row>
+              <Dragger
+              {...props}
+              accept=".zip, .rar"
+              customRequest={handleUpload}
+              multiple={false}
+              // showUploadList={{ showRemoveIcon: true }}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">Bấm hoặc kéo file vào để upload file</p>
+              <p className="ant-upload-hint">Chỉ nhận file định dạng .zip hoặc .rar</p>
+            </Dragger>
+            </Row>
           </Row>
         </Form>
       </CustomModal>
@@ -160,3 +196,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps)(CreateCustomer);
+
