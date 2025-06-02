@@ -45,4 +45,8 @@ export const API = {
   CREATE_POSITION: '/api/phan-quyen-vai-tro/',
 
   HISTORY: '/api/lich-su-hoat-dong',
+
+  DATASET: '/api/dataset',
+  DATASET_ID: '/api/dataset/{0}',
+  DATASET_IMAGE: '/api/dataset/images',
 };

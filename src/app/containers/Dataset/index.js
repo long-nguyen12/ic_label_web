@@ -6,7 +6,7 @@ import { CheckCircleOutlined, MobileOutlined, MailOutlined } from "@ant-design/i
 
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import Loading from "@components/Loading";
-import { createUser, getAllCustomer } from "@app/services/Customer";
+import { createUser, getAllDataset } from "@app/services/Dataset";
 import Filter from "@components/Filter";
 
 import {
@@ -15,10 +15,9 @@ import {
   handleReplaceUrlSearch,
   paginationConfig,
 } from "@app/common/functionCommons";
-import CreateCustomer from "@containers/Dataset/CreateUser";
+import CreateDataset from "@containers/Dataset/CreateDataset";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
-import { getAllUser } from "../../services/User";
 
 function Dataset({ myInfo }) {
   let history = useHistory();
@@ -32,37 +31,36 @@ function Dataset({ myInfo }) {
     query: {},
   });
 
-  const [stateCreateCustomer, setStateCreateCustomer] = useState({
+  const [stateCreateDataset, setStateCreateDataset] = useState({
     isShowModal: false,
     createUserSelected: null,
   });
 
   let dataSearch = [
-    { name: "search", label: t("Tên người dùng"), type: CONSTANTS.TEXT },
-    { name: "user_mobi", label: t("Điện thoại"), type: CONSTANTS.TEXT },
+    { name: "search", label: t("Tên dataset"), type: CONSTANTS.TEXT },
   ];
 
   useEffect(() => {
     (async () => {
       const { page, limit, ...queryObj } = convertQueryToObject(history.location.search);
-      await getUser(page, limit, queryObj);
+      await getDataset(page, limit, queryObj);
     })();
   }, []);
 
-  function handleShowModalCreateCustomer(isShowModal, createUserSelected = null) {
+  function handleShowModalCreateDataset(isShowModal, createUserSelected = null) {
     if (isShowModal) {
-      setStateCreateCustomer({ isShowModal, createUserSelected });
+      setStateCreateDataset({ isShowModal, createUserSelected });
     } else {
-      setStateCreateCustomer({ ...stateCreateCustomer, createUserSelected });
+      setStateCreateDataset({ ...stateCreateDataset, createUserSelected });
     }
   }
 
-  async function getUser(page = users.currentPage, limit = users.pageSize, query = users.query) {
+  async function getDataset(page = users.currentPage, limit = users.pageSize, query = users.query) {
     page = page ? parseInt(page) : 1;
     limit = limit ? parseInt(limit) : 10;
     handleReplaceUrlSearch(history, page, limit, query);
     setLoading(true);
-    const apiResponse = await getAllUser(page, limit, query);
+    const apiResponse = await getAllDataset(page, limit, query);
     if (apiResponse) {
       setUsers({
         dataRes: apiResponse.docs,
@@ -76,14 +74,14 @@ function Dataset({ myInfo }) {
   }
 
   async function handleChangePagination(current, pageSize) {
-    await getUser(current, pageSize);
+    await getDataset(current, pageSize);
   }
 
   async function handleFilter(query) {
-    await getUser(1, users.pageSize, query);
+    await getDataset(1, users.pageSize, query);
   }
 
-  async function handleCreateCustomer(dataForm) {
+  async function handleCreateDataset(dataForm) {
     setLoading(true);
     let data = {
       user_id: myInfo._id,
@@ -97,18 +95,18 @@ function Dataset({ myInfo }) {
 
     const apiResponse = await createUser(data);
     if (apiResponse) {
-      setStateCreateCustomer({ isShowModal: false, createUserSelected: null });
+      setStateCreateDataset({ isShowModal: false, createUserSelected: null });
       message.success("Đã tạo người dùng mới thành công!");
-      await getUser();
+      await getDataset();
     }
     setLoading(false);
   }
 
   const columnsUser = [
     {
-      title: <div style={{ textTransform: "capitalize" }}>{"Tên người dùng"}</div>,
-      dataIndex: "userFullName",
-      width: "15%",
+      title: <div style={{ textTransform: "capitalize" }}>{"Tên dataset"}</div>,
+      dataIndex: "datasetName",
+      width: "30%",
       align: "center",
       render: (value, record) => {
         return (
@@ -119,9 +117,9 @@ function Dataset({ myInfo }) {
       },
     },
     {
-      title: <div style={{ textTransform: "capitalize" }}>{"Username"}</div>,
-      dataIndex: "userName",
-      width: "15%",
+      title: <div style={{ textTransform: "capitalize" }}>{"Mô tả"}</div>,
+      dataIndex: "datasetNote",
+      width: "30%",
       align: "center",
       render: (value, record) => {
         return (
@@ -129,35 +127,13 @@ function Dataset({ myInfo }) {
             <div align="center">{value}</div>
           </>
         );
-      },
-    },
-    {
-      title: <div style={{ textTransform: "capitalize" }}>{"Địa chỉ Email"}</div>,
-      dataIndex: "userEmail",
-      width: "15%",
-      align: "center",
-      render: (value, record) => {
-        return (
-          <>
-            <div align="center">{value}</div>
-          </>
-        );
-      },
-    },
-    {
-      title: <div style={{ textTransform: "capitalize" }}>{t("Quyền")}</div>,
-      width: "15%",
-      dataIndex: "customerAdd",
-      align: "center",
-      render: (value) => {
-        return <div align="left">{value}</div>;
       },
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{t("THAO_TAC")}</div>,
       key: "action",
       align: "center",
-      width: "10%",
+      width: "40%",
       fixed: "right",
       render: (record) => {
         return (
@@ -166,7 +142,7 @@ function Dataset({ myInfo }) {
               pathname: "/user/" + record._id,
               aboutProps: {
                 id: record._id,
-                name: record.customerName,
+                name: record.datasetName,
               },
             }}
           >
@@ -180,7 +156,7 @@ function Dataset({ myInfo }) {
   ];
 
   async function handleShowModalCreateDataset() {
-    setStateCreateCustomer({ isShowModal: true, createUserSelected: null });
+    setStateCreateDataset({ isShowModal: true, createUserSelected: null });
   }
 
   return (
@@ -210,11 +186,11 @@ function Dataset({ myInfo }) {
         />
       </Loading>
 
-      <CreateCustomer
-        isModalVisible={stateCreateCustomer.isShowModal}
-        handleOk={handleCreateCustomer}
-        handleCancel={() => setStateCreateCustomer({ isShowModal: false, createUserSelected: null })}
-        createUserSelected={stateCreateCustomer.createUserSelected}
+      <CreateDataset
+        isModalVisible={stateCreateDataset.isShowModal}
+        handleOk={handleCreateDataset}
+        handleCancel={() => setStateCreateDataset({ isShowModal: false, createUserSelected: null })}
+        createUserSelected={stateCreateDataset.createUserSelected}
       />
     </>
   );
