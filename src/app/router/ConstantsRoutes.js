@@ -15,6 +15,8 @@ import { InboxOutlined } from "@ant-design/icons";
 import Dashboard from "../containers/Dashboard";
 import Dataset from "../containers/Dataset";
 import History from "../containers/History";
+import DatasetDetail from "../containers/Dataset/DatasetDetail/DatasetDetail";
+import DatasetLabel from "../containers/Dataset/DatasetLabel/DatasetLabel";
 
 function renderIcon(icon) {
   return (
@@ -51,7 +53,10 @@ export const ConstantsRoutes = [
     component: Dataset,
     icon: renderIcon(<FileIcon />),
     permission: [],
-    children: [{ path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: UserDetail, permission: ["admin"] }],
+    children: [
+      { path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: DatasetDetail, permission: [] },
+      { path: URL.DATASET_ID.format(":id"), component: DatasetLabel, permission: [] },
+    ],
   },
   {
     path: URL.USER_MANAGEMENT,

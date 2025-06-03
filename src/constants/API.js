@@ -10,6 +10,7 @@ export const API = {
   NOTIFICATION_ID: '/api/notification/{0}',
 
   UPLOAD_IMAGES: '/api/files',
+  UPLOAD_FILE: '/api/files/upload-file',
 
   UPLOAD_IMG: '/backend/api/dataset/addimages/{0}',
 
@@ -49,4 +50,7 @@ export const API = {
   DATASET: '/api/dataset',
   DATASET_ID: '/api/dataset/{0}',
   DATASET_IMAGE: '/api/dataset/images',
+
+  GALLERY: '/api/gallery',
+  GALLERY_ID: '/api/gallery/{0}',
 };

@@ -12,7 +12,6 @@ export function getAllDataset(currentPage = 1, totalDocs = 0, query, loading) {
   return getAllPaginationBase(API.DATASET, currentPage, totalDocs, query, loading);
 }
 
-
 export function createDataset(data) {
   return axios
     .post(API.DATASET, data)
@@ -55,3 +54,8 @@ export function updateDatasetById(id, dataForm) {
 export function deleteDatasetById(id) {
   return deleteByIdBase(API.DELETE_USER, id);
 }
+
+export function getAllImages(currentPage = 1, totalDocs = 0, query, loading) {
+  return getAllPaginationBase(API.GALLERY, currentPage, totalDocs, query, loading);
+}
+

@@ -31,19 +31,6 @@ export const URL = {
   MODEL_REINFORCEDID_ID: '/reinforced/{0}',
   MONITORING_CAMERA_ID: '/monitoring-camera/{0}',
 
-  PRODUCT_MANAGEMENT: '/product',
-  PRODUCT_MANAGEMENT_ID: '/product/{0}',
-
-  CUSTOMER_MANAGEMENT: '/customer',
-  CUSTOMER_MANAGEMENT_ID: '/customer/{0}',
-
-  SALE_BILLS: '/salebills',
-  SALE_BILLS_ADD: '/salebills/add',
-  SALE_BILLS_ID: '/salebills/{0}',
-
-  SALE_BILLS_DETAIL: '/salebills-detail',
-  SALE_BILLS_DETAIL_ADD: '/salebills-detail/add',
-  SALE_BILLS_DETAIL_ID: '/salebills-detail/{0}',
 
   POSITION: '/position',
   POSITION_ID: '/position/{0}',
@@ -52,4 +39,5 @@ export const URL = {
   USER_MANAGEMENT_ID: '/user/{0}',
 
   DATASET_MANAGEMENT_ID: '/dataset-management/{0}',
+  DATASET_ID: '/dataset/{0}',
 };

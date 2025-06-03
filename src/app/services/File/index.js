@@ -44,3 +44,21 @@ export function uploadImages(files) {
     })
   );
 }
+
+export function uploadFile(file) {
+  const config = {
+    headers: { "content-type": "multipart/form-data" },
+  };
+  const formData = new FormData();
+  formData.append("file", file);
+  return axios
+    .post(API.UPLOAD_FILE, formData, config)
+    .then((response) => {
+      const data = convertSnakeCaseToCamelCase(response?.data);
+      return data;
+    })
+    .catch((error) => {
+      renderMessageError(error);
+      return null;
+    });
+}
