@@ -38,6 +38,20 @@ export function getDatasetById(id) {
     });
 }
 
+export function getGallery(id) {
+  console.log("getGallery id", id);
+  return axios
+    .get(API.GALLERY_ID.format(id))
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 export function updateDatasetById(id, dataForm) {
   return axios
     .put(API.UPDATE_USER.format(id), dataForm)

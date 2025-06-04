@@ -37,7 +37,8 @@ export const URL = {
 
   USER_MANAGEMENT: '/user',
   USER_MANAGEMENT_ID: '/user/{0}',
-
+  GALLGERY: '/gallery',
+  GALLGERY_ID: '/gallery/{0}',
   DATASET_MANAGEMENT_ID: '/dataset-management/{0}',
   DATASET_ID: '/dataset/{0}',
 };

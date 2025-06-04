@@ -6,6 +6,7 @@ import { URL } from "@url";
 import React, { lazy } from "react";
 import UploadScreen from "../containers/Upload";
 import User from "../containers/User";
+import Gallery from "../containers/Dataset/Gallery/Gallery";
 import UserDetail from "../containers/User/UserDetail/UserDetail";
 
 const MyInfo = lazy(() => import("@containers/MyInfo/MyInfo"));
@@ -97,5 +98,16 @@ export const ConstantsRoutes = [
 
   // not render in menu
   { path: URL.MY_INFO, breadcrumbName: "Thông tin cá nhân", component: MyInfo, permission: [] },
+  { 
+    path: URL.GALLGERY,
+    breadcrumbName: "Chi tiết hình ảnh",
+    children: [
+      {
+        path: URL.GALLGERY_ID.format(":id"),
+        component: Gallery,
+        permission: [],
+      },
+    ],
+   },
 ];
 
