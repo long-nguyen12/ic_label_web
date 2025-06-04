@@ -11,8 +11,8 @@ import { toast, convertCamelCaseToSnakeCase } from "@app/common/functionCommons"
 import { CONSTANTS, RULES } from "@constants";
 import { useTranslation } from "react-i18next";
 import { DeleteOutlined } from "@ant-design/icons";
-import "./DatasetLabel.scss";
-import { getDatasetById, updateDataset, deleteDataset } from "@app/services/Dataset";
+import "./DatasetEdit.scss";
+import { getDatasetById, updateDatasetById, deleteDataset } from "@app/services/Dataset";
 import { uploadImages } from "@app/services/File";
 import axios from "axios";
 import { formatNumber } from "@src/utils";
@@ -47,27 +47,15 @@ function DatasetLabel({ myInfo }) {
     const apiResponse = await getDatasetById(id);
     if (apiResponse) {
       formCreateDataset.setFieldsValue({
-        datasetName: apiResponse?.tenvaitro,
-        datasetDescription: apiResponse?.mota,
+        datasetName: apiResponse?.datasetName,
+        datasetNote: apiResponse?.datasetNote,
       });
       setDatasetDetail(apiResponse);
     }
   }
 
-  async function handleDelete() {
-    const api = await deleteDataset(id);
-    if (api) {
-      toast(CONSTANTS.SUCCESS, "Xoá chức vụ thành công");
-      history.replace(URL.POSITION);
-    }
-  }
-
   async function handleUpdateDataset(data) {
-    let dataPost = {
-      tenvaitro: data.datasetName,
-      mota: data.datasetDescription,
-    };
-    const api = await updateDataset(id, convertCamelCaseToSnakeCase(dataPost));
+    const api = await updateDatasetById(id, convertCamelCaseToSnakeCase(data));
     if (api) {
       toast(CONSTANTS.SUCCESS, "Cập nhật dữ liệu thành công!");
       await getDatasetDetail();
@@ -78,7 +66,7 @@ function DatasetLabel({ myInfo }) {
     <>
       {isMobile ? (
         <Col>
-          <CustomBreadcrumb breadcrumbLabel={"CHI TIẾT CHỨC VỤ"}> </CustomBreadcrumb>
+          <CustomBreadcrumb breadcrumbLabel={"CHI TIẾT DATASET"}> </CustomBreadcrumb>
           <Row>
             <Button
               className="mr-2"
@@ -89,23 +77,10 @@ function DatasetLabel({ myInfo }) {
             >
               {t("QUAY_LAI")}
             </Button>
-            {(isMyDataset || myInfo.role === CONSTANTS.ADMIN) && (
-              <Popconfirm
-                title={"Xoá chức vụ"}
-                onConfirm={handleDelete}
-                okText={t("XOA")}
-                cancelText={t("HUY")}
-                okButtonProps={{ type: "danger" }}
-              >
-                <Button danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-                  {"Xoá chức vụ"}
-                </Button>
-              </Popconfirm>
-            )}
           </Row>
         </Col>
       ) : (
-        <CustomBreadcrumb breadcrumbLabel={"CHI TIẾT CHÚC VỤ"}>
+        <CustomBreadcrumb breadcrumbLabel={"CHI TIẾT DATASET"}>
           <Button
             className="mr-2"
             type="primary"
@@ -115,19 +90,6 @@ function DatasetLabel({ myInfo }) {
           >
             {t("QUAY_LAI")}
           </Button>
-          {(isMyDataset || myInfo.role === CONSTANTS.ADMIN) && (
-            <Popconfirm
-              title={"Xoá chức vụ"}
-              onConfirm={handleDelete}
-              okText={t("XOA")}
-              cancelText={t("HUY")}
-              okButtonProps={{ type: "danger" }}
-            >
-              <Button danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-                {"Xoá chức vụ"}
-              </Button>
-            </Popconfirm>
-          )}
         </CustomBreadcrumb>
       )}
 
@@ -136,7 +98,7 @@ function DatasetLabel({ myInfo }) {
           <Form id="form-modal" form={formCreateDataset} onFinish={handleUpdateDataset}>
             <Row gutter={15}>
               <CustomSkeleton
-                label={"Tên chức vụ"}
+                label={"Tên dataset"}
                 name="datasetName"
                 layoutCol={layoutCol}
                 labelCol={labelCol}
@@ -146,10 +108,11 @@ function DatasetLabel({ myInfo }) {
               />
               <CustomSkeleton
                 label={t("MO_TA")}
-                name="datasetDescription"
+                name="datasetNote"
                 layoutCol={layoutCol}
                 labelCol={labelCol}
                 type={CONSTANTS.TEXT_AREA}
+                rules={[RULES.REQUIRED]}
                 autoSize={{ minRows: 2, maxRows: 3 }}
                 form={formCreateDataset}
               />

@@ -13,7 +13,6 @@ import { convertQueryToObject, handleReplaceUrlSearch, paginationConfig, toast }
 import CreatePosition from "@containers/Position/CreatePosition";
 import { useTranslation } from "react-i18next";
 import { CONSTANTS } from "@constants";
-import { uploadImages } from "../../services/File";
 import { deletePosition } from "../../services/Position";
 
 function Position({ myInfo }) {
@@ -33,7 +32,7 @@ function Position({ myInfo }) {
     createPositionSelected: null,
   });
 
-  let dataSearch = [{ name: "search", label: "Tên chức vụ", type: CONSTANTS.TEXT }];
+  let dataSearch = [{ name: "tenvaitro", label: "Tên vai trò", type: CONSTANTS.TEXT }];
 
   useEffect(() => {
     (async () => {
@@ -79,7 +78,7 @@ function Position({ myInfo }) {
   async function handleDelete(id) {
     const apiResponse = await deletePosition(id);
     if (apiResponse) {
-      toast(CONSTANTS.SUCCESS, "Xoá chức vụ thành công!");
+      toast(CONSTANTS.SUCCESS, "Xoá vai trò thành công!");
       await getPosition(positions.currentPage, positions.pageSize, positions.query);
     } else {
       toast(CONSTANTS.ERROR, apiResponse.message);
@@ -95,7 +94,7 @@ function Position({ myInfo }) {
     const apiResponse = await createPosition(data);
     if (apiResponse) {
       setStateCreatePosition({ isShowModal: false, createPositionSelected: null });
-      message.success("Đã tạo chức vụ mới thành công!");
+      message.success("Đã tạo vai trò mới thành công!");
       await getPosition();
     } else {
       message.error(apiResponse.message);
@@ -162,7 +161,7 @@ function Position({ myInfo }) {
 
   return (
     <>
-      <CustomBreadcrumb breadcrumbLabel={"CHỨC VỤ"}>
+      <CustomBreadcrumb breadcrumbLabel={"VAI TRÒ"}>
         <Row>
           <Button type="primary" icon={<i className="fa fa-plus mr-1" />} onClick={handleShowModalCreatePosition}>
             {t("TAO_MOI")}

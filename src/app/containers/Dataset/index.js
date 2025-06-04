@@ -6,7 +6,7 @@ import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import Loading from "@components/Loading";
-import { createDataset, getAllDataset } from "@app/services/Dataset";
+import { createDataset, getAllDataset, deleteDatasetById } from "@app/services/Dataset";
 import Filter from "@components/Filter";
 
 import {
@@ -36,7 +36,7 @@ function Dataset({ myInfo }) {
     createDatasetSelected: null,
   });
 
-  let dataSearch = [{ name: "search", label: t("Tên dataset"), type: CONSTANTS.TEXT }];
+  let dataSearch = [{ name: "dataset_name", label: t("Tên dataset"), type: CONSTANTS.TEXT }];
 
   useEffect(() => {
     (async () => {
@@ -96,6 +96,16 @@ function Dataset({ myInfo }) {
     setLoading(false);
   }
 
+  async function handleDelete(id) {
+    setLoading(true);
+    const apiResponse = await deleteDatasetById(id);
+    if (apiResponse) {
+      message.success("Đã xoá dataset thành công!");
+    }
+    setLoading(false);
+    await getDataset(datasets.currentPage, datasets.pageSize, datasets.query);
+  }
+
   const columnsDataset = [
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Tên dataset"}</div>,
@@ -137,7 +147,6 @@ function Dataset({ myInfo }) {
                 pathname: "/dataset-management/" + record._id,
                 aboutProps: {
                   id: record._id,
-                  name: record.tenvaitro,
                 },
               }}
             >
@@ -150,7 +159,6 @@ function Dataset({ myInfo }) {
                 pathname: "/dataset/" + record._id,
                 aboutProps: {
                   id: record._id,
-                  name: record.tenvaitro,
                 },
               }}
             >
@@ -159,7 +167,7 @@ function Dataset({ myInfo }) {
               </Button>
             </NavLink>
             <Popconfirm
-              title={t("Xoá vai trò này?")}
+              title={t("Xoá dataset này?")}
               onConfirm={() => handleDelete(record._id)}
               okText={t("XOA")}
               cancelText={t("HUY")}

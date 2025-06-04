@@ -27,7 +27,7 @@ export function createDataset(data) {
 
 export function getDatasetById(id) {
   return axios
-    .get(API.GET_USER.format(id))
+    .get(API.DATASET_ID.format(id))
     .then((response) => {
       if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
       return null;
@@ -39,7 +39,6 @@ export function getDatasetById(id) {
 }
 
 export function getGallery(id) {
-  console.log("getGallery id", id);
   return axios
     .get(API.GALLERY_ID.format(id))
     .then((response) => {
@@ -54,7 +53,7 @@ export function getGallery(id) {
 
 export function updateDatasetById(id, dataForm) {
   return axios
-    .put(API.UPDATE_USER.format(id), dataForm)
+    .put(API.DATASET_ID.format(id), dataForm)
     .then((response) => {
       if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
       return null;
@@ -66,10 +65,22 @@ export function updateDatasetById(id, dataForm) {
 }
 
 export function deleteDatasetById(id) {
-  return deleteByIdBase(API.DELETE_USER, id);
+  return deleteByIdBase(API.DATASET_ID, id);
 }
 
 export function getAllImages(currentPage = 1, totalDocs = 0, query, loading) {
   return getAllPaginationBase(API.GALLERY, currentPage, totalDocs, query, loading);
 }
 
+export function getAllCaptionImages(){
+  return axios
+    .get(API.GALLERY_CAPTION)
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
