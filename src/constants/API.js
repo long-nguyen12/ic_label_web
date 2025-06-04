@@ -52,6 +52,8 @@ export const API = {
   DATASET_IMAGE: '/api/dataset/images',
 
   GALLERY: '/api/gallery',
+  GENERATE_GALLERY_AI: '/api/gallery/generate-ai-image/{0}',
+
   GALLERY_CAPTION: '/api/gallery/all',
   GALLERY_ID: '/api/gallery/{0}',
 };
