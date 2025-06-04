@@ -1,7 +1,7 @@
 import { Button, Popconfirm, Row, Form, Col, List, Image, Pagination } from "antd";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, NavLink } from "react-router-dom";
 import { convertUrlToImagesList, getfileDetail } from "@components/Upload/imageUtil";
 import CustomSkeleton from "@components/CustomSkeleton";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
@@ -146,13 +146,24 @@ function DatasetDetail({ myInfo }) {
                 const imgUrl = `${BASE_URL}/${item.datasetId?.datasetPath}/${item.imageName}`;
                 return (
                   <List.Item key={item._id}>
-                    <Image
-                      width="100%"
-                      src={imgUrl}
-                      alt="dataset-img"
-                      style={{ objectFit: "cover", borderRadius: 8 }}
-                      preview={false}
-                    />
+                    <NavLink
+                      to={{
+                        pathname: "/gallery/" + item._id + "?id_folder=" + item.datasetId?._id,
+                        aboutProps: {
+                          id: item._id,
+                          id_folder: item.datasetId?._id,
+                         
+                        },
+                      }}
+                    >
+                      <Image
+                        width="100%"
+                        src={imgUrl}
+                        alt="dataset-img"
+                        style={{ objectFit: "cover", borderRadius: 8 }}
+                        preview={false}
+                      />
+                    </NavLink>
                   </List.Item>
                 );
               }}
