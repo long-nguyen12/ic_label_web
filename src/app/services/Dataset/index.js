@@ -51,6 +51,34 @@ export function getGallery(id) {
     });
 }
 
+
+export function generateGalleryAI(id) {
+  return axios
+    .get(API.GENERATE_GALLERY_AI.format(id))
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+export function updateGalleryById(id, data) {
+  return axios
+    .put(API.GALLERY_ID.format(id), data)
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+
 export function updateDatasetById(id, dataForm) {
   return axios
     .put(API.DATASET_ID.format(id), dataForm)

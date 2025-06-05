@@ -152,7 +152,6 @@ function DatasetDetail({ myInfo }) {
                         aboutProps: {
                           id: item._id,
                           id_folder: item.datasetId?._id,
-                         
                         },
                       }}
                     >
