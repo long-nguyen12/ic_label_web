@@ -22,7 +22,6 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
     if (myInfo) {
       const dataField = cloneObj(myInfo);
       formInfo.setFieldsValue(dataField);
-      console.log("myInfo", myInfo);
       if (myInfo.active === USER_STATUS.ACTIVE.code) formInfo.setFieldsValue({ active: USER_STATUS.ACTIVE.label });
       if (myInfo.active === USER_STATUS.INACTIVE.code) formInfo.setFieldsValue({ active: USER_STATUS.INACTIVE.label });
       formInfo.setFieldsValue({ username: myInfo.username, workAddress: myInfo.workAddress });

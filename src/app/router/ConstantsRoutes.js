@@ -11,7 +11,6 @@ import UserDetail from "../containers/User/UserDetail/UserDetail";
 
 const MyInfo = lazy(() => import("@containers/MyInfo/MyInfo"));
 const Account = lazy(() => import("@containers/Account/index"));
-const Statistic = lazy(() => import("@containers/Statistic/index"));
 import { InboxOutlined } from "@ant-design/icons";
 import Dashboard from "../containers/Dashboard";
 import Dataset from "../containers/Dataset";

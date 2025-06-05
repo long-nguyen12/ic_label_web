@@ -51,7 +51,6 @@ export function getGallery(id) {
     });
 }
 
-
 export function generateGalleryAI(id) {
   return axios
     .get(API.GENERATE_GALLERY_AI.format(id))
@@ -78,7 +77,6 @@ export function updateGalleryById(id, data) {
     });
 }
 
-
 export function updateDatasetById(id, dataForm) {
   return axios
     .put(API.DATASET_ID.format(id), dataForm)
@@ -100,7 +98,11 @@ export function getAllImages(currentPage = 1, totalDocs = 0, query, loading) {
   return getAllPaginationBase(API.GALLERY, currentPage, totalDocs, query, loading);
 }
 
-export function getAllCaptionImages(){
+export function getAllImageNoQuery(currentPage = 1, totalDocs = 0, query) {
+  return getAllPaginationBase(API.GALLERY, currentPage, totalDocs, query);
+}
+
+export function getAllCaptionImages() {
   return axios
     .get(API.GALLERY_CAPTION)
     .then((response) => {

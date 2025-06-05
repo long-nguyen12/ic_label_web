@@ -6,7 +6,7 @@
     
     "build:clean": "rimraf ./build",
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
-    "start": "cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider node --max-old-space-size=4096 server",
+    "start": "cross-env NODE_ENV=development node --max-old-space-size=4096 server",
 
     "start:web": "cross-env NODE_ENV=production node --max-old-space-size=4096 server",
     "start:prod": "cross-env NODE_ENV=production node server",

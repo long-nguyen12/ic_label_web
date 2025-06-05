@@ -108,7 +108,6 @@ function Account({ isLoading, myInfo }) {
     if (type === CONSTANTS.UPDATE) {
       apiResponse = await updateUser(stateUser.userSelected._id, dataRequest);
       if (apiResponse) {
-        console.log(apiResponse);
         delete apiResponse.token;
         const docs = dataUser.map((doc) => {
           if (doc._id === apiResponse?._id) {

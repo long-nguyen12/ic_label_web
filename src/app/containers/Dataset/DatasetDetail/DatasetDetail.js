@@ -10,13 +10,13 @@ import { URL } from "@url";
 import { toast, convertCamelCaseToSnakeCase } from "@app/common/functionCommons";
 import { CONSTANTS, RULES } from "@constants";
 import { useTranslation } from "react-i18next";
-import { DeleteOutlined } from "@ant-design/icons";
+import { CheckCircleTwoTone } from "@ant-design/icons";
 import "./DatasetDetail.scss";
 import { getDatasetById, updateDataset, deleteDataset } from "@app/services/Dataset";
 import { uploadImages } from "@app/services/File";
 import axios from "axios";
 import { formatNumber } from "@src/utils";
-import { getAllImages } from "../../../services/Dataset";
+import { getAllImageNoQuery, getAllImages } from "../../../services/Dataset";
 import { BASE_URL } from "../../../../constants/BASE_URL";
 
 import {
@@ -42,6 +42,13 @@ function DatasetDetail({ myInfo }) {
     totalDocs: 0,
     query: { datasetId: id },
   });
+  const [datasetNoPage, setDatasetNoPage] = useState({
+    dataRes: [],
+    currentPage: 1,
+    pageSize: 24,
+    totalDocs: 0,
+    query: { datasetId: id },
+  });
 
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -53,9 +60,25 @@ function DatasetDetail({ myInfo }) {
     (async () => {
       const { page, limit, ...queryObj } = convertQueryToObject(history.location.search);
       await getDataset(page, limit, queryObj);
+      await getGallery();
     })();
   }, []);
   const isMobile = width <= 768;
+
+  async function getGallery() {
+    setLoading(true);
+    const response = await getAllImageNoQuery();
+    if (response) {
+      setDatasetNoPage({
+        dataRes: response.docs,
+        currentPage: response.currentPage,
+        pageSize: response.pageSize,
+        totalDocs: response.totalDocs,
+        query: { datasetId: id },
+      });
+    }
+    setLoading(false);
+  }
 
   async function getDataset(page = datasets.currentPage, limit = datasets.pageSize, query = datasets.query) {
     page = page ? parseInt(page) : 1;
@@ -101,17 +124,44 @@ function DatasetDetail({ myInfo }) {
             grid={{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 4, xl: 6, xxl: 6 }}
             dataSource={datasets.dataRes}
             loading={loading}
-            renderItem={(item) => {
-              const imgUrl = `${BASE_URL}/${item.datasetId?.datasetPath}/${item.imageName}`;
+            renderItem={(item, index) => {
+              const datasetPath = item.datasetId?.datasetPath?.replace(/\\/g, "/");
+              const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}`;
+              const isEnoughCaptions = Array.isArray(item.imageCaption) && item.imageCaption.length === 5;
               return (
                 <List.Item key={item._id}>
-                  <Image
-                    width="100%"
-                    src={imgUrl}
-                    alt="dataset-img"
-                    style={{ objectFit: "cover", borderRadius: 8 }}
-                    preview={false}
-                  />
+                  <NavLink
+                    to={{
+                      pathname: "/gallery/" + item._id + "?index=" + index,
+                      state: {
+                        id: item._id,
+                        id_folder: item.datasetId?._id,
+                        image_list: datasetNoPage?.dataRes,
+                      },
+                    }}
+                  >
+                    <div style={{ position: "relative" }}>
+                      {isEnoughCaptions && (
+                        <CheckCircleTwoTone
+                          twoToneColor="#52c41a"
+                          style={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            fontSize: 28,
+                            zIndex: 2,
+                          }}
+                        />
+                      )}
+                      <Image
+                        width="100%"
+                        src={imgUrl}
+                        alt="dataset-img"
+                        style={{ objectFit: "cover", borderRadius: 8 }}
+                        preview={false}
+                      />
+                    </div>
+                  </NavLink>
                 </List.Item>
               );
             }}
@@ -142,26 +192,43 @@ function DatasetDetail({ myInfo }) {
               grid={{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 4, xl: 6, xxl: 6 }}
               dataSource={datasets.dataRes}
               loading={loading}
-              renderItem={(item) => {
-                const imgUrl = `${BASE_URL}/${item.datasetId?.datasetPath}/${item.imageName}`;
+              renderItem={(item, index) => {
+                const datasetPath = item.datasetId?.datasetPath?.replace(/\\/g, "/");
+                const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}`;
+                const isEnoughCaptions = Array.isArray(item.imageCaption) && item.imageCaption.length === 5;
                 return (
                   <List.Item key={item._id}>
                     <NavLink
                       to={{
-                        pathname: "/gallery/" + item._id + "?id_folder=" + item.datasetId?._id,
-                        aboutProps: {
+                        pathname: "/gallery/" + item._id + "?index=" + index,
+                        state: {
                           id: item._id,
                           id_folder: item.datasetId?._id,
+                          image_list: datasetNoPage?.dataRes,
                         },
                       }}
                     >
-                      <Image
-                        width="100%"
-                        src={imgUrl}
-                        alt="dataset-img"
-                        style={{ objectFit: "cover", borderRadius: 8 }}
-                        preview={false}
-                      />
+                      <div style={{ position: "relative" }}>
+                        {isEnoughCaptions && (
+                          <CheckCircleTwoTone
+                            twoToneColor="#52c41a"
+                            style={{
+                              position: "absolute",
+                              top: 8,
+                              right: 8,
+                              fontSize: 28,
+                              zIndex: 2,
+                            }}
+                          />
+                        )}
+                        <Image
+                          width="100%"
+                          src={imgUrl}
+                          alt="dataset-img"
+                          style={{ objectFit: "cover", borderRadius: 8 }}
+                          preview={false}
+                        />
+                      </div>
                     </NavLink>
                   </List.Item>
                 );
@@ -187,4 +254,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(DatasetDetail);
-

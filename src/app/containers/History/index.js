@@ -43,7 +43,6 @@ function History({ myInfo }) {
     setLoading(true);
     const apiResponse = await getAllHistory(page, limit, query);
     if (apiResponse) {
-      console.log("apiResponse", apiResponse);
       setUsers({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -79,7 +78,6 @@ function History({ myInfo }) {
       width: "15%",
       align: "center",
       render: (value, record) => {
-        console.log("value", value);  
         return (
           <>
             <div align="center">{value?.userFullName}</div>
