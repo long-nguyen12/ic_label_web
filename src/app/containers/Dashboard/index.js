@@ -4,26 +4,30 @@ import { Divider, Typography, Card, Col, Row } from "antd";
 import { getAllDataset, getAllCaptionImages } from "@app/services/Dataset";
 import { getAllUser } from "@app/services/User";
 const { Title, Paragraph, Text, Link } = Typography;
+import Loading from "@components/Loading";
 
 export default function Dashboard() {
   const [datasetCount, setDatasetCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [captionCount, setCaptionCount] = useState(0);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       const datasetRes = await getAllDataset();
       const userRes = await getAllUser();
       const captionRes = await getAllCaptionImages();
       setDatasetCount(datasetRes?.totalDocs || 0);
       setUserCount(userRes?.totalDocs || 0);
       setCaptionCount(captionRes?.length || 0);
+      setLoading(false);
     }
     fetchData();
   }, []);
 
   return (
-    <>
+    <Loading active={loading} layoutBackground>
       <CustomBreadcrumb breadcrumbLabel={"Dashboard"} />
       <div className="site-layout-background">
         <div className="site-card-wrapper">
@@ -46,7 +50,7 @@ export default function Dashboard() {
           </Row>
         </div>
       </div>
-    </>
+    </Loading>
   );
 }
 
