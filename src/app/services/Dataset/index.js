@@ -114,3 +114,28 @@ export function getAllCaptionImages() {
       return null;
     });
 }
+
+export function downloadAnnotationById(id) {
+  return axios
+    .get(API.DATASET_ANNOTATION.format(id), {
+      responseType: "blob",
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("Download annotation response:", response);
+        const dataStr = JSON.stringify(response.data, null, 2);
+        const fileName = `annotation_${Date.now()}.json`;
+        const blob = new Blob([dataStr]);
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        return true;
+      }
+      return false;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return false;
+    });
+}

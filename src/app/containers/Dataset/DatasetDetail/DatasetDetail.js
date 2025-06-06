@@ -16,7 +16,7 @@ import { getDatasetById, updateDataset, deleteDataset } from "@app/services/Data
 import { uploadImages } from "@app/services/File";
 import axios from "axios";
 import { formatNumber } from "@src/utils";
-import { getAllImageNoQuery, getAllImages } from "../../../services/Dataset";
+import { downloadAnnotationById, getAllImageNoQuery, getAllImages } from "../../../services/Dataset";
 import { BASE_URL } from "../../../../constants/BASE_URL";
 
 import {
@@ -110,6 +110,15 @@ function DatasetDetail({ myInfo }) {
     await getDataset(current, pageSize);
   }
 
+  async function handleDownload() {
+    const apiRes = await downloadAnnotationById(id);
+    if (apiRes) {
+      toast.success("Tải về nhãn thành công");
+    } else {
+      toast.error("Tải về nhãn thất bại");
+    }
+  }
+
   return (
     <>
       {isMobile ? (
@@ -124,6 +133,15 @@ function DatasetDetail({ myInfo }) {
               onClick={() => history.goBack()}
             >
               {t("QUAY_LAI")}
+            </Button>
+            <Button
+              className="mr-2"
+              type="primary"
+              ghost
+              icon={<i className="fa fa-download mr-1" />}
+              onClick={handleDownload}
+            >
+              Tải về nhãn
             </Button>
           </Row>
           <List
@@ -192,6 +210,15 @@ function DatasetDetail({ myInfo }) {
               onClick={() => history.goBack()}
             >
               {t("QUAY_LAI")}
+            </Button>
+            <Button
+              className="mr-2"
+              type="primary"
+              ghost
+              icon={<i className="fa fa-download mr-1" />}
+              onClick={handleDownload}
+            >
+              Tải về nhãn
             </Button>
           </CustomBreadcrumb>
           <div className="site-layout-background">
@@ -267,4 +294,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(DatasetDetail);
-

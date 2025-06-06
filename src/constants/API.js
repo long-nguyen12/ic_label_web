@@ -49,6 +49,7 @@ export const API = {
 
   DATASET: '/api/dataset',
   DATASET_ID: '/api/dataset/{0}',
+  DATASET_ANNOTATION: '/api/dataset/{0}/download',
   DATASET_IMAGE: '/api/dataset/images',
 
   GALLERY: '/api/gallery',
