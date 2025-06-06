@@ -21,7 +21,6 @@ const Gallery = (props) => {
   const { id } = props.match.params;
   let history = useHistory();
   const { t } = useTranslation();
-  const [width, setWidth] = useState(window.innerWidth);
   const [linkImage, setLinkImage] = useState(null);
   const [data, setData] = useState([]);
   const [describe, setDescribe] = useState({
@@ -39,11 +38,7 @@ const Gallery = (props) => {
   const [currentIndex, setCurrentIndex] = useState(params.index ? Number(params.index) : 0);
   const [imageList, setImageList] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  function getQueryParams(search) {
-    return Object.fromEntries(new URLSearchParams(search));
-  }
-
+  
   useEffect(() => {
     if (location?.state?.image_list) {
       setImageList(location.state.image_list);
@@ -51,7 +46,7 @@ const Gallery = (props) => {
   }, [location?.state?.image_list]);
 
   useEffect(() => {
-    const params = getQueryParams(location.search);
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
     if (params.index !== undefined) {
       setCurrentIndex(Number(params.index));
     }
@@ -60,6 +55,8 @@ const Gallery = (props) => {
   useEffect(() => {
     if (imageList.length > 0 && imageList[currentIndex]) {
       (async () => {
+        console.log("Fetching image data for index:", currentIndex);
+        console.log("Image id:", imageList[currentIndex]._id || imageList[currentIndex].id);
         handleGetFile(imageList[currentIndex]._id || imageList[currentIndex].id);
       })();
     }
@@ -96,6 +93,7 @@ const Gallery = (props) => {
 
   const onFinish = async (values) => {
     try {
+      values.have_caption = true;
       const dataUpdate = await updateGalleryById(id, values);
       formCreateCaptions.setFieldsValue({
         image_caption: dataUpdate.imageCaption,
@@ -245,3 +243,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(Gallery);
+

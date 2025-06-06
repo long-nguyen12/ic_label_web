@@ -65,16 +65,21 @@ function DatasetDetail({ myInfo }) {
   }, []);
   const isMobile = width <= 768;
 
-  async function getGallery() {
+  async function getGallery(page = datasets.currentPage, limit = datasets.pageSize, query = datasets.query) {
+    page = page ? parseInt(page) : 1;
     setLoading(true);
-    const response = await getAllImageNoQuery();
-    if (response) {
+    query = convertCamelCaseToSnakeCase(query);
+    query.dataset_id = id;
+    const apiResponse = await getAllImages(page, 0, query);
+    if (apiResponse) {
+      console.log("image list", apiResponse);
+
       setDatasetNoPage({
-        dataRes: response.docs,
-        currentPage: response.currentPage,
-        pageSize: response.pageSize,
-        totalDocs: response.totalDocs,
-        query: { datasetId: id },
+        dataRes: apiResponse.docs,
+        currentPage: page,
+        pageSize: limit,
+        totalDocs: apiResponse.totalDocs,
+        query: query,
       });
     }
     setLoading(false);
@@ -89,6 +94,7 @@ function DatasetDetail({ myInfo }) {
     query.dataset_id = id;
     const apiResponse = await getAllImages(page, limit, query);
     if (apiResponse) {
+      console.log("paginate image list", apiResponse);
       setDatasets({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -128,11 +134,12 @@ function DatasetDetail({ myInfo }) {
               const datasetPath = item.datasetId?.datasetPath?.replace(/\\/g, "/");
               const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}`;
               const isEnoughCaptions = Array.isArray(item.imageCaption) && item.imageCaption.length === 5;
+              const currentIndex = datasets.pageSize * (datasets.currentPage - 1) + index;
               return (
                 <List.Item key={item._id}>
                   <NavLink
                     to={{
-                      pathname: "/gallery/" + item._id + "?index=" + index,
+                      pathname: "/gallery/" + item._id + "?index=" + currentIndex,
                       state: {
                         id: item._id,
                         id_folder: item.datasetId?._id,
@@ -195,17 +202,23 @@ function DatasetDetail({ myInfo }) {
               renderItem={(item, index) => {
                 const datasetPath = item.datasetId?.datasetPath?.replace(/\\/g, "/");
                 const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}`;
-                const isEnoughCaptions = Array.isArray(item.imageCaption) && item.imageCaption.length === 5;
+                const isEnoughCaptions = item.haveCaption;
+                const currentIndex = datasets.pageSize * (datasets.currentPage - 1) + index;
                 return (
                   <List.Item key={item._id}>
                     <NavLink
                       to={{
-                        pathname: "/gallery/" + item._id + "?index=" + index,
+                        pathname: "/gallery/" + item._id + "?index=" + currentIndex,
                         state: {
                           id: item._id,
                           id_folder: item.datasetId?._id,
                           image_list: datasetNoPage?.dataRes,
                         },
+                      }}
+                      onClick={() => {
+                        // Your custom logic here
+                        console.log("Clicked image:", item._id);
+                        // You can also call a function or dispatch an action here
                       }}
                     >
                       <div style={{ position: "relative" }}>
@@ -254,3 +267,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(DatasetDetail);
+

@@ -10,7 +10,7 @@ export default function Dashboard() {
   const [datasetCount, setDatasetCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [captionCount, setCaptionCount] = useState(0);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -27,9 +27,9 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <Loading active={loading} layoutBackground>
+    <>
       <CustomBreadcrumb breadcrumbLabel={"Dashboard"} />
-      <div className="site-layout-background">
+      <Loading active={loading} layoutBackground>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={8}>
@@ -49,8 +49,8 @@ export default function Dashboard() {
             </Col>
           </Row>
         </div>
-      </div>
-    </Loading>
+      </Loading>
+    </>
   );
 }
 
