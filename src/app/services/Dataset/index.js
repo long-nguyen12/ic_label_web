@@ -77,6 +77,10 @@ export function updateGalleryById(id, data) {
     });
 }
 
+export function deleteGalleryById(id) {
+  return deleteByIdBase(API.GALLERY_ID, id);
+}
+
 export function updateDatasetById(id, dataForm) {
   return axios
     .put(API.DATASET_ID.format(id), dataForm)

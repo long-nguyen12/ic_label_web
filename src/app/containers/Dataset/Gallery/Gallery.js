@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Popconfirm, Row, Form, Col, List, Image, Pagination, Space, Spin } from "antd";
+import { Button, Popconfirm, Row, Form, Col, List, Image, Pagination, Space } from "antd";
 import { connect } from "react-redux";
-import { getGallery, updateGalleryById, generateGalleryAI } from "../../../services/Dataset/index";
+import { getGallery, updateGalleryById, generateGalleryAI, deleteGalleryById } from "../../../services/Dataset/index";
 import { BASE_URL } from "../../../../constants/BASE_URL";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import { toast } from "@app/common/functionCommons";
 import CustomSkeleton from "@components/CustomSkeleton";
 import { useLocation } from "react-router-dom";
 import Loading from "@components/Loading";
+import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const layoutCol = { xs: 24, md: 24, xl: 24, xxl: 24 };
 const labelCol = { xs: 24 };
@@ -38,7 +39,7 @@ const Gallery = (props) => {
   const [currentIndex, setCurrentIndex] = useState(params.index ? Number(params.index) : 0);
   const [imageList, setImageList] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     if (location?.state?.image_list) {
       setImageList(location.state.image_list);
@@ -55,8 +56,6 @@ const Gallery = (props) => {
   useEffect(() => {
     if (imageList.length > 0 && imageList[currentIndex]) {
       (async () => {
-        console.log("Fetching image data for index:", currentIndex);
-        console.log("Image id:", imageList[currentIndex]._id || imageList[currentIndex].id);
         handleGetFile(imageList[currentIndex]._id || imageList[currentIndex].id);
       })();
     }
@@ -135,6 +134,43 @@ const Gallery = (props) => {
       });
     }
   };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      const apiResponse = await deleteGalleryById(imageList[currentIndex]._id || imageList[currentIndex].id);
+      if (!apiResponse) {
+        toast(CONSTANTS.ERROR, "Xoá dữ liệu thất bại!");
+        return;
+      }
+
+      toast(CONSTANTS.SUCCESS, "Xoá dữ liệu thành công!");
+      const updatedImageList = imageList.filter((image) => image._id !== id && image.id !== id);
+      setImageList(updatedImageList);
+      if (currentIndex >= updatedImageList.length) {
+        setCurrentIndex(updatedImageList.length - 1);
+      }
+      if (updatedImageList.length > 0) {
+        const nextImageId = updatedImageList[currentIndex]._id || updatedImageList[currentIndex].id;
+        history.replace({
+          pathname: `/gallery/${nextImageId}${location.pathname.includes("?") ? "" : ""}`,
+          search: `?index=${currentIndex}`,
+          state: { ...location.state, image_list: updatedImageList },
+        });
+      } else {
+        history.replace({
+          pathname: "/gallery",
+          search: "",
+          state: { ...location.state, image_list: [] },
+        });
+      }
+    } catch (error) {
+      toast(CONSTANTS.ERROR, "Xoá dữ liệu thất bại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"GÁN NHÃN DỮ LIỆU"}>
@@ -150,9 +186,26 @@ const Gallery = (props) => {
         <Button className="mr-2" type="primary" ghost onClick={handleBack} disabled={currentIndex === 0}>
           Ảnh trước đó
         </Button>
-        <Button type="primary" ghost onClick={handleNext} disabled={currentIndex === imageList.length - 1}>
+        <Button
+          className="mr-2"
+          type="primary"
+          ghost
+          onClick={handleNext}
+          disabled={currentIndex === imageList.length - 1}
+        >
           Ảnh tiếp theo
         </Button>
+        <Popconfirm
+          title={t("Xoá ảnh này khỏi dataset?")}
+          onConfirm={() => handleDelete()}
+          okText={t("XOA")}
+          cancelText={t("HUY")}
+          okButtonProps={{ type: "danger" }}
+        >
+          <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
+            {t("Xoá ảnh này")}
+          </Button>
+        </Popconfirm>
       </CustomBreadcrumb>
 
       <Loading active={loading} layoutBackground>
@@ -243,4 +296,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(Gallery);
-
