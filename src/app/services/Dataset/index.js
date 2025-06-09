@@ -126,10 +126,8 @@ export function downloadAnnotationById(id) {
     })
     .then((response) => {
       if (response.status === 200) {
-        console.log("Download annotation response:", response);
-        const dataStr = JSON.stringify(response.data, null, 2);
         const fileName = `annotation_${Date.now()}.json`;
-        const blob = new Blob([dataStr]);
+        const blob = new Blob([response.data], { type: "application/json" });
         const link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
         link.download = fileName;
