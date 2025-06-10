@@ -134,6 +134,19 @@ function Dataset({ myInfo }) {
       },
     },
     {
+      title: <div style={{ textTransform: "capitalize" }}>{"Người gán nhãn"}</div>,
+      dataIndex: "annotatorId",
+      width: "30%",
+      align: "center",
+      render: (value, record) => {
+        return (
+          <>
+            <div align="center">{value?.userFullName}</div>
+          </>
+        );
+      },
+    },
+    {
       title: <div style={{ textTransform: "capitalize" }}>{t("THAO_TAC")}</div>,
       key: "action",
       align: "center",

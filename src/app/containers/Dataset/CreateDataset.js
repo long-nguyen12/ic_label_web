@@ -10,6 +10,7 @@ import { cloneObj } from "@app/common/functionCommons";
 // import { getAllLabels } from '@app/services/Dataset';
 import { InboxOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { getAllUserNoQuery } from "../../services/User";
 const layoutCol = { xs: 24, md: 12, xl: 12, xxl: 12 };
 const labelCol = { xs: 24 };
 
@@ -40,6 +41,7 @@ const uploadProps = {
 function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createDatasetSelected, ...props }) {
   const [formCreateDataset] = Form.useForm();
   const [datasetAvailable, setDatasetAvailable] = useState(null);
+  const [users, setUsers] = useState([]);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -50,7 +52,19 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
         formCreateDataset.setFieldsValue(dataField);
       }
     }
+    getData();
   }, [isModalVisible]);
+
+  async function getData() {
+    try {
+      const data = await getAllUserNoQuery();
+      if (data) {
+        setUsers(data.docs);
+      }
+    } catch (error) {
+      console.error("Error fetching labels:", error);
+    }
+  }
 
   function onFinish(data) {
     const newData = {
@@ -78,7 +92,7 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
       };
       const response = await axios.post(API.UPLOAD_FILE, formData, config);
       onSuccess(response.data, file);
-      if(response.status === 200) {
+      if (response.status === 200) {
         setDatasetAvailable(response.data);
         formCreateDataset.setFieldsValue({
           datasetPath: response.data?.extractPath,
@@ -88,6 +102,17 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
       onError(error);
     }
   };
+
+  function convertDataSelect(list) {
+    let arrConvert = [];
+    list.map((data) => {
+      let objConvert = {};
+      objConvert.label = data.userFullName || data.userName;
+      objConvert.value = data._id;
+      arrConvert.push(objConvert);
+    });
+    return arrConvert;
+  }
 
   return (
     <>
@@ -121,6 +146,18 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
               rules={[RULES.REQUIRED]}
               form={formCreateDataset}
             />
+            {users && (
+              <CustomSkeleton
+                label={"Chọn người gán nhãn bộ dữ liệu"}
+                name="annotatorId"
+                layoutCol={layoutCol}
+                labelCol={labelCol}
+                options={convertDataSelect(users)}
+                type={CONSTANTS.SELECT}
+                rules={[RULES.REQUIRED]}
+                form={formCreateDataset}
+              />
+            )}
             <CustomSkeleton
               name="datasetPath"
               label={t("Đường dẫn bộ dữ liệu")}
@@ -159,4 +196,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps)(CreateDataset);
-

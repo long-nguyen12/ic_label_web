@@ -25,6 +25,10 @@ export function getAllUser(currentPage = 1, totalDocs = 0, query, loading) {
   return getAllPaginationBase(API.USERS, currentPage, totalDocs, query, loading);
 }
 
+export function getAllUserNoQuery(currentPage = 1, totalDocs = 0, query) {
+  return getAllPaginationBase(API.USERS, currentPage, totalDocs, query);
+}
+
 export function getUserByToken() {
   return axios
     .get(API.MY_INFO)

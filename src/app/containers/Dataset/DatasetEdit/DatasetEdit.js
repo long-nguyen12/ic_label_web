@@ -5,7 +5,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { convertUrlToImagesList, getfileDetail } from "@components/Upload/imageUtil";
 import CustomSkeleton from "@components/CustomSkeleton";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
-import UploadImg from "@components/Upload/UploadImg";
+import Loading from "@components/Loading";
 import { URL } from "@url";
 import { toast, convertCamelCaseToSnakeCase } from "@app/common/functionCommons";
 import { CONSTANTS, RULES } from "@constants";
@@ -16,6 +16,8 @@ import { getDatasetById, updateDatasetById, deleteDataset } from "@app/services/
 import { uploadImages } from "@app/services/File";
 import axios from "axios";
 import { formatNumber } from "@src/utils";
+import { get } from "jquery";
+import { getAllUserNoQuery } from "../../../services/User";
 
 const layoutCol = { xs: 24, md: 24 };
 const labelCol = { xs: 24 };
@@ -29,6 +31,8 @@ function DatasetLabel({ myInfo }) {
   const [datasetDetail, setDatasetDetail] = useState(null);
   const isMyDataset = datasetDetail?.userId?._id === myInfo._id;
   const [width, setWidth] = useState(window.innerWidth);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
@@ -36,6 +40,7 @@ function DatasetLabel({ myInfo }) {
 
   useEffect(() => {
     getDatasetDetail();
+    getData();
     window.addEventListener("resize", handleWindowSizeChange);
     return () => {
       window.removeEventListener("resize", handleWindowSizeChange);
@@ -43,23 +48,52 @@ function DatasetLabel({ myInfo }) {
   }, []);
   const isMobile = width <= 768;
 
+  async function getData() {
+    try {
+      setLoading(true);
+      const data = await getAllUserNoQuery();
+      if (data) {
+        setUsers(data.docs);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching labels:", error);
+    }
+  }
+
   async function getDatasetDetail() {
+    setLoading(true);
     const apiResponse = await getDatasetById(id);
     if (apiResponse) {
       formCreateDataset.setFieldsValue({
         datasetName: apiResponse?.datasetName,
         datasetNote: apiResponse?.datasetNote,
+        annotatorId: apiResponse?.annotatorId?._id || null,
       });
       setDatasetDetail(apiResponse);
     }
+    setLoading(false);
   }
 
   async function handleUpdateDataset(data) {
+    setLoading(true);
     const api = await updateDatasetById(id, convertCamelCaseToSnakeCase(data));
     if (api) {
       toast(CONSTANTS.SUCCESS, "Cập nhật dữ liệu thành công!");
       await getDatasetDetail();
     }
+    setLoading(false);
+  }
+
+  function convertDataSelect(list) {
+    let arrConvert = [];
+    list.map((data) => {
+      let objConvert = {};
+      objConvert.label = data.userFullName || data.userName;
+      objConvert.value = data._id;
+      arrConvert.push(objConvert);
+    });
+    return arrConvert;
   }
 
   return (
@@ -92,9 +126,9 @@ function DatasetLabel({ myInfo }) {
           </Button>
         </CustomBreadcrumb>
       )}
+      <Loading active={loading} layoutBackground>
 
       {datasetDetail && (
-        <div className="site-layout-background">
           <Form id="form-modal" form={formCreateDataset} onFinish={handleUpdateDataset}>
             <Row gutter={15}>
               <CustomSkeleton
@@ -116,6 +150,18 @@ function DatasetLabel({ myInfo }) {
                 autoSize={{ minRows: 2, maxRows: 3 }}
                 form={formCreateDataset}
               />
+              {users && (
+                <CustomSkeleton
+                  label={"Chọn người gán nhãn bộ dữ liệu"}
+                  name="annotatorId"
+                  layoutCol={layoutCol}
+                  labelCol={labelCol}
+                  options={convertDataSelect(users)}
+                  type={CONSTANTS.SELECT}
+                  rules={[RULES.REQUIRED]}
+                  form={formCreateDataset}
+                />
+              )}
             </Row>
             <Row gutter={24}>
               <Button
@@ -133,8 +179,8 @@ function DatasetLabel({ myInfo }) {
               </Button>
             </Row>
           </Form>
-        </div>
       )}
+        </Loading>
     </>
   );
 }
@@ -145,4 +191,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(DatasetLabel);
-
