@@ -87,6 +87,7 @@ function Dataset({ myInfo }) {
       dataset_name: dataForm.dataset_name,
       dataset_note: dataForm.dataset_note,
       dataset_path: dataForm.dataset_path,
+      annotator_id: dataForm.annotator_id
     };
 
     const apiResponse = await createDataset(data);

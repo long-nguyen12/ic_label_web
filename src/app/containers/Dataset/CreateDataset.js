@@ -71,6 +71,7 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
       dataset_name: data.datasetName,
       dataset_note: data.datasetNote,
       dataset_path: data.datasetPath,
+      annotator_id: data.annotatorId
     };
     if (props.isLoading) return;
     handleOk(newData);
