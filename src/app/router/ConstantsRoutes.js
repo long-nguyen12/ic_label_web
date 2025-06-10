@@ -75,10 +75,10 @@ export const ConstantsRoutes = [
       {
         path: URL.POSITION_ID.format(":id"),
         component: PositionDetail,
-        permission: [],
+        permission: ["admin"],
       },
     ],
-    permission: [],
+    permission: ["admin"],
   },
   {
     path: URL.MENU.HISTORY,

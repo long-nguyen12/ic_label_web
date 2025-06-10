@@ -53,12 +53,14 @@ function UserDetail({ myInfo }) {
     await axios.all(apiRequestAll).then(
       axios.spread(function (userDetail, listPosition) {
         if (userDetail) {
+          console.log(userDetail)
           formCreateUser.setFieldsValue({
             userFullName: userDetail.userFullName,
             userMobi: userDetail.userMobi,
             userEmail: userDetail.userEmail,
             userAdd: userDetail.userAdd,
             userNote: userDetail.userNote,
+            userRole: userDetail.userClassify._id
           });
           setUserDetail(userDetail);
         }
