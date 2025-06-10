@@ -17,7 +17,9 @@ import {
 } from "@app/common/functionCommons";
 import CreateDataset from "@containers/Dataset/CreateDataset";
 import { useTranslation } from "react-i18next";
-import { CONSTANTS } from "@constants";
+import { CONSTANTS, USER_TYPE } from "@constants";
+
+const permitted_roles = [USER_TYPE.ADMIN.code, USER_TYPE.UPLOAD.code];
 
 function Dataset({ myInfo }) {
   let history = useHistory();
@@ -167,29 +169,33 @@ function Dataset({ myInfo }) {
                 {t("XEM")}
               </Button>
             </NavLink>
-            <NavLink
-              to={{
-                pathname: "/dataset/" + record._id,
-                aboutProps: {
-                  id: record._id,
-                },
-              }}
-            >
-              <Button type="primary" ghost icon={<EditOutlined style={{ fontSize: 15 }} />} className="mr-1">
-                {t("Sửa")}
-              </Button>
-            </NavLink>
-            <Popconfirm
-              title={t("Xoá dataset này?")}
-              onConfirm={() => handleDelete(record._id)}
-              okText={t("XOA")}
-              cancelText={t("HUY")}
-              okButtonProps={{ type: "danger" }}
-            >
-              <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-                {t("Xoá")}
-              </Button>
-            </Popconfirm>
+            {myInfo.role === USER_TYPE.ADMIN.code && (
+              <>
+                <NavLink
+                  to={{
+                    pathname: "/dataset/" + record._id,
+                    aboutProps: {
+                      id: record._id,
+                    },
+                  }}
+                >
+                  <Button type="primary" ghost icon={<EditOutlined style={{ fontSize: 15 }} />} className="mr-1">
+                    {t("Sửa")}
+                  </Button>
+                </NavLink>
+                <Popconfirm
+                  title={t("Xoá dataset này?")}
+                  onConfirm={() => handleDelete(record._id)}
+                  okText={t("XOA")}
+                  cancelText={t("HUY")}
+                  okButtonProps={{ type: "danger" }}
+                >
+                  <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
+                    {t("Xoá")}
+                  </Button>
+                </Popconfirm>
+              </>
+            )}
           </Row>
         );
       },
@@ -200,13 +206,20 @@ function Dataset({ myInfo }) {
     setStateCreateDataset({ isShowModal: true, createDatasetSelected: null });
   }
 
+  function uploadPermission(role) {
+    if (!permitted_roles.includes(role)) return false;
+    return true;
+  }
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"DATASET"}>
         <Row>
-          <Button type="primary" icon={<i className="fa fa-plus mr-1" />} onClick={handleShowModalCreateDataset}>
-            {t("TAO_MOI")}
-          </Button>
+          {uploadPermission(myInfo.role) && (
+            <Button type="primary" icon={<i className="fa fa-plus mr-1" />} onClick={handleShowModalCreateDataset}>
+              {t("TAO_MOI")}
+            </Button>
+          )}
         </Row>
       </CustomBreadcrumb>
       <Loading active={loading} layoutBackground>
@@ -243,4 +256,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps)(Dataset);
-

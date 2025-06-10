@@ -77,6 +77,8 @@ export const CONSTANTS = {
   ADMIN: 'admin',
   MANAGE: 'manage',
   USER: 'user',
+  UPLOAD: 'upload',
+  ANNOTATE: 'annotate',
 
   TIME_REFRESH: 10,
 
@@ -206,11 +208,13 @@ export const USER_TYPE = {
   USER: { code: 'user', label: 'Nhân viên' },
   MANAGE: { code: 'manage', label: 'Quản lý đơn vị' },
   ADMIN: { code: 'admin', label: 'Quản trị hệ thống' },
+  UPLOAD: {code: 'upload', label: 'Người thu thập dữ liệu'},
+  ANNOTATE: {code: 'annotate', label: 'Người gán nhãn dữ liệu'},
 };
 
 export const USER_STATUS = {
-  ACTIVE: { code: 'active', label: 'Hoạt động' },
-  INACTIVE: { code: 'inactive', label: 'Tạm khóa' },
+  ACTIVE: { code: true, label: 'Hoạt động' },
+  INACTIVE: { code: false, label: 'Tạm khóa' },
 };
 
 export const SHARE_PERMISSION = {

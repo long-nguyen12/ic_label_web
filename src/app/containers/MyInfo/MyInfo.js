@@ -26,8 +26,8 @@ function MyInfo({ myInfo, isLoading, roleList, ...props }) {
       if (myInfo.active === USER_STATUS.INACTIVE.code) formInfo.setFieldsValue({ active: USER_STATUS.INACTIVE.label });
       formInfo.setFieldsValue({ username: myInfo.username, workAddress: myInfo.workAddress });
       if (myInfo.role === USER_TYPE.ADMIN.code) formInfo.setFieldsValue({ role: USER_TYPE.ADMIN.label });
-      if (myInfo.role === USER_TYPE.MANAGE.code) formInfo.setFieldsValue({ role: USER_TYPE.MANAGE.label });
-      if (myInfo.role === USER_TYPE.USER.code) formInfo.setFieldsValue({ role: USER_TYPE.USER.label });
+      if (myInfo.role === USER_TYPE.UPLOAD.code) formInfo.setFieldsValue({ role: USER_TYPE.UPLOAD.label });
+      if (myInfo.role === USER_TYPE.ANNOTATE.code) formInfo.setFieldsValue({ role: USER_TYPE.ANNOTATE.label });
     }
   }, [myInfo]);
 
