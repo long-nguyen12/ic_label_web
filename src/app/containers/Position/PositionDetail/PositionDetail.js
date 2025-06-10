@@ -154,18 +154,9 @@ function PositionDetail({ myInfo }) {
                 form={formCreatePosition}
               />
             </Row>
-            <Row gutter={24}>
-              <Button
-                size="default"
-                type="primary"
-                htmlType="submit"
-                className="btn"
-                // disabled={false}
-                // {...(onOk ? { onClick: onOk } : null)}
-                // loading={isLoading && !isDisabledSubmit}
-                // icon={submitIcon}
-              >
-                {/* {submitLabel} */}
+            <Row gutter={24} className="m-2 pt-2" align="middle" justify="center">
+              <Button size="default" type="primary" htmlType="submit">
+                <i className="fa fa-save mr-1"></i>
                 Lưu
               </Button>
             </Row>
@@ -182,4 +173,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(PositionDetail);
-

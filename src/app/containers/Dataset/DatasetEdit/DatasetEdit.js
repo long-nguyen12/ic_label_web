@@ -127,8 +127,7 @@ function DatasetLabel({ myInfo }) {
         </CustomBreadcrumb>
       )}
       <Loading active={loading} layoutBackground>
-
-      {datasetDetail && (
+        {datasetDetail && (
           <Form id="form-modal" form={formCreateDataset} onFinish={handleUpdateDataset}>
             <Row gutter={15}>
               <CustomSkeleton
@@ -163,24 +162,19 @@ function DatasetLabel({ myInfo }) {
                 />
               )}
             </Row>
-            <Row gutter={24}>
+            <Row gutter={24} className="m-2 pt-2" align="middle" justify="center">
               <Button
                 size="default"
                 type="primary"
                 htmlType="submit"
-                className="btn"
-                // disabled={false}
-                // {...(onOk ? { onClick: onOk } : null)}
-                // loading={isLoading && !isDisabledSubmit}
-                // icon={submitIcon}
               >
-                {/* {submitLabel} */}
+                <i className="fa fa-save mr-1"></i>
                 Lưu
               </Button>
             </Row>
           </Form>
-      )}
-        </Loading>
+        )}
+      </Loading>
     </>
   );
 }
