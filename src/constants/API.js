@@ -57,4 +57,6 @@ export const API = {
 
   GALLERY_CAPTION: '/api/gallery/all',
   GALLERY_ID: '/api/gallery/{0}',
+  GALLERY_ROTATE_LEFT: '/api/gallery/rotate-left/{0}?angle={1}',
+  GALLERY_ROTATE_RIGHT: '/api/gallery/rotate-right/{0}?angle={1}',
 };

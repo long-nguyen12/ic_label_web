@@ -141,3 +141,30 @@ export function downloadAnnotationById(id) {
       return false;
     });
 }
+
+export function rotateImageLeftById(id, angle) {
+  return axios
+    .get(API.GALLERY_ROTATE_LEFT.format(id, angle))
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
+export function rotateImageRightById(id, angle) {
+  return axios
+    .get(API.GALLERY_ROTATE_RIGHT.format(id, angle))
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+

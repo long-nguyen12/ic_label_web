@@ -150,7 +150,7 @@ function DatasetDetail({ myInfo }) {
             loading={loading}
             renderItem={(item, index) => {
               const datasetPath = item.datasetId?.datasetPath?.replace(/\\/g, "/");
-              const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}`;
+              const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}?t=${Date.now()}`;
               const isEnoughCaptions = Array.isArray(item.imageCaption) && item.imageCaption.length === 5;
               const currentIndex = datasets.pageSize * (datasets.currentPage - 1) + index;
               return (
@@ -228,7 +228,7 @@ function DatasetDetail({ myInfo }) {
               loading={loading}
               renderItem={(item, index) => {
                 const datasetPath = item.datasetId?.datasetPath?.replace(/\\/g, "/");
-                const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}`;
+                const imgUrl = `${BASE_URL}/${datasetPath}/${item.imageName}?t=${Date.now()}`;
                 const isEnoughCaptions = item.haveCaption;
                 const currentIndex = datasets.pageSize * (datasets.currentPage - 1) + index;
                 return (

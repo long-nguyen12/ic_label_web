@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button, Popconfirm, Row, Form, Col, List, Image, Pagination, Space } from "antd";
 import { connect } from "react-redux";
-import { getGallery, updateGalleryById, generateGalleryAI, deleteGalleryById } from "../../../services/Dataset/index";
+import {
+  getGallery,
+  updateGalleryById,
+  generateGalleryAI,
+  deleteGalleryById,
+  rotateImageLeftById,
+  rotateImageRightById,
+} from "../../../services/Dataset/index";
 import { BASE_URL } from "../../../../constants/BASE_URL";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import { useTranslation } from "react-i18next";
@@ -171,6 +178,44 @@ const Gallery = (props) => {
     }
   };
 
+  const handleRotateLeft = async () => {
+    setLoading(true);
+    try {
+      const apiResponse = await rotateImageLeftById(imageList[currentIndex]._id || imageList[currentIndex].id, 90);
+      if (!apiResponse) {
+        toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
+        return;
+      }
+      setData(apiResponse);
+      const datasetPath = apiResponse.datasetId?.datasetPath?.replace(/\\/g, "/");
+      const imgUrl = `${BASE_URL}/${datasetPath}/${apiResponse.imageName}?t=${Date.now()}`;
+      setLinkImage(imgUrl);
+    } catch (error) {
+      toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRotateRight = async () => {
+    setLoading(true);
+    try {
+      const apiResponse = await rotateImageRightById(imageList[currentIndex]._id || imageList[currentIndex].id, 90);
+      if (!apiResponse) {
+        toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
+        return;
+      }
+      setData(apiResponse);
+      const datasetPath = apiResponse.datasetId?.datasetPath?.replace(/\\/g, "/");
+      const imgUrl = `${BASE_URL}/${datasetPath}/${apiResponse.imageName}?t=${Date.now()}`;
+      setLinkImage(imgUrl);
+    } catch (error) {
+      toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"GÁN NHÃN DỮ LIỆU"}>
@@ -271,6 +316,16 @@ const Gallery = (props) => {
                       <Form.Item>
                         <Button onClick={handleGetAI} loading={loading}>
                           Sinh box
+                        </Button>
+                      </Form.Item>
+                      <Form.Item>
+                        <Button onClick={handleRotateLeft} loading={loading} style={{ background: "52c41a", color: "fff" }}>
+                          Xoay trái
+                        </Button>
+                      </Form.Item>
+                      <Form.Item>
+                        <Button onClick={handleRotateRight} loading={loading} style={{ background: "52c41a", color: "fff" }}>
+                          Xoay phải
                         </Button>
                       </Form.Item>
                       <Form.Item>
