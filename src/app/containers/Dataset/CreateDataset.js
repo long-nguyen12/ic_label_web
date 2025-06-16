@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Form, message, Row, Upload } from "antd";
+import { Form, message, Row, Upload, Button } from "antd";
 import { useTranslation } from "react-i18next";
 import CustomModal from "@components/CustomModal";
 import CustomSkeleton from "@components/CustomSkeleton";
@@ -8,7 +8,7 @@ import { CONSTANTS, RULES, BASE_URL } from "@constants";
 import { API } from "@api";
 import { cloneObj } from "@app/common/functionCommons";
 // import { getAllLabels } from '@app/services/Dataset';
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { getAllUserNoQuery } from "../../services/User";
 const layoutCol = { xs: 24, md: 12, xl: 12, xxl: 12 };
@@ -19,7 +19,6 @@ const { Dragger } = Upload;
 const uploadProps = {
   name: "file",
   multiple: false,
-  // action: BASE_URL + API.UPLOAD_FILE,
   onChange(info) {
     const { status } = info.file;
     console.log("onChange", info.file, info.fileList);
@@ -38,10 +37,20 @@ const uploadProps = {
   },
 };
 
-function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createDatasetSelected, ...props }) {
+function CreateDataset({
+  myInfo,
+  isModalVisible,
+  handleOk,
+  handleCancel,
+  handleChangeFileList,
+  createDatasetSelected,
+  fileList,
+  ...props
+}) {
   const [formCreateDataset] = Form.useForm();
   const [datasetAvailable, setDatasetAvailable] = useState(null);
   const [users, setUsers] = useState([]);
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -71,7 +80,7 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
       dataset_name: data.datasetName,
       dataset_note: data.datasetNote,
       dataset_path: data.datasetPath,
-      annotator_id: data.annotatorId
+      annotator_id: data.annotatorId,
     };
     if (props.isLoading) return;
     handleOk(newData);
@@ -170,7 +179,7 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
               disabled={true}
               placeholder={t("Đường dẫn bộ dữ liệu sẽ được điền sau khi upload file thành công")}
             />
-            <Dragger
+            {/* <Dragger
               {...uploadProps}
               accept=".zip, .rar"
               customRequest={handleUpload}
@@ -182,7 +191,18 @@ function CreateDataset({ myInfo, isModalVisible, handleOk, handleCancel, createD
               </p>
               <p className="ant-upload-text">Bấm hoặc kéo file vào để upload file</p>
               <p className="ant-upload-hint">Chỉ nhận file định dạng .zip hoặc .rar</p>
-            </Dragger>
+            </Dragger> */}
+            <Upload
+              {...uploadProps}
+              accept=".zip, .rar"
+              customRequest={handleUpload}
+              multiple={false}
+              fileList={fileList}
+              onChange={({ fileList }) => handleChangeFileList(fileList)}
+              showUploadList={{ showRemoveIcon: true }}
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
           </Row>
         </Form>
       </CustomModal>

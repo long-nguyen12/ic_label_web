@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
-import { Button, message, Row, Table, Popconfirm } from "antd";
+import { Button, message, Row, Table, Popconfirm, Tag } from "antd";
 import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
@@ -32,6 +32,7 @@ function Dataset({ myInfo }) {
     totalDocs: 0,
     query: {},
   });
+  const [fileList, setFileList] = useState([]);
 
   const [stateCreateDataset, setStateCreateDataset] = useState({
     isShowModal: false,
@@ -87,7 +88,7 @@ function Dataset({ myInfo }) {
       dataset_name: dataForm.dataset_name,
       dataset_note: dataForm.dataset_note,
       dataset_path: dataForm.dataset_path,
-      annotator_id: dataForm.annotator_id
+      annotator_id: dataForm.annotator_id,
     };
 
     const apiResponse = await createDataset(data);
@@ -145,6 +146,29 @@ function Dataset({ myInfo }) {
         return (
           <>
             <div align="center">{value?.userFullName}</div>
+          </>
+        );
+      },
+    },
+    {
+      title: <div style={{ textTransform: "capitalize" }}>{"Tổng số ảnh đã gán nhãn"}</div>,
+      dataIndex: "allImages",
+      width: "30%",
+      align: "center",
+      render: (value, record) => {
+        if (!record?.captionedImages || !record?.allImages) return <Tag color="red">0/0</Tag>;
+        else if (record?.captionedImages.length === record?.allImages.length) {
+          return (
+            <Tag color="green">
+              <div align="center">{value}</div>
+            </Tag>
+          );
+        }
+        return (
+          <>
+            <Tag color="red">
+              {record?.captionedImages.length}/{record?.allImages.length}
+            </Tag>
           </>
         );
       },
@@ -212,6 +236,10 @@ function Dataset({ myInfo }) {
     return true;
   }
 
+  function handleChangeFileList(fileList) {
+    setFileList(fileList);
+  }
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"DATASET"}>
@@ -244,8 +272,13 @@ function Dataset({ myInfo }) {
       <CreateDataset
         isModalVisible={stateCreateDataset.isShowModal}
         handleOk={handleCreateDataset}
-        handleCancel={() => setStateCreateDataset({ isShowModal: false, createDatasetSelected: null })}
+        handleCancel={() => {
+          setStateCreateDataset({ isShowModal: false, createDatasetSelected: null });
+          setFileList([]);
+        }}
+        handleChangeFileList={handleChangeFileList}
         createDatasetSelected={stateCreateDataset.createDatasetSelected}
+        fileList={fileList}
       />
     </>
   );
