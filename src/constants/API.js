@@ -10,7 +10,10 @@ export const API = {
   NOTIFICATION_ID: "/api/notification/{0}",
 
   UPLOAD_IMAGES: "/api/files",
+  UPLOAD_DOCUMENT: "/api/files/upload-document",
   UPLOAD_FILE: "/api/files/upload-file",
+
+  DOCUMENT_FILE: "/api/file",
 
   UPLOAD_IMG: "/backend/api/dataset/addimages/{0}",
 
@@ -60,4 +63,5 @@ export const API = {
   GALLERY_ID: "/api/gallery/{0}",
   GALLERY_ROTATE_LEFT: "/api/gallery/rotate-left/{0}?angle={1}",
   GALLERY_ROTATE_RIGHT: "/api/gallery/rotate-right/{0}?angle={1}",
+  GALLERY_GENERATE_CAPTION: "/api/gallery/generate-captions/{0}",
 };

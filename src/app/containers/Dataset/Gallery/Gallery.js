@@ -8,6 +8,7 @@ import {
   deleteGalleryById,
   rotateImageLeftById,
   rotateImageRightById,
+  generateCaptionById,
 } from "../../../services/Dataset/index";
 import { BASE_URL } from "../../../../constants/BASE_URL";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
@@ -216,6 +217,27 @@ const Gallery = (props) => {
     }
   };
 
+  const handleGenerateCaption = async () => {
+    setLoading(true);
+    try {
+      const apiResponse = await generateCaptionById(imageList[currentIndex]._id || imageList[currentIndex].id);
+      if (apiResponse) {
+        const generatedCaptions = apiResponse.captions.map((caption) => ({
+          caption: caption,
+          segment: "",
+        }));
+        formCreateCaptions.setFieldsValue({
+          image_caption: generatedCaptions,
+        });
+        toast(CONSTANTS.SUCCESS, "Sinh caption thành công!");
+      }
+    } catch (error) {
+      toast(CONSTANTS.ERROR, "Sinh caption thất bại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"GÁN NHÃN DỮ LIỆU"}>
@@ -314,18 +336,33 @@ const Gallery = (props) => {
 
                     <Space className="mt-4" align="center" style={{ display: "flex", justifyContent: "center" }}>
                       <Form.Item>
+                        <Button
+                          onClick={handleRotateLeft}
+                          loading={loading}
+                          style={{ background: "52c41a", color: "fff" }}
+                        >
+                          Xoay trái
+                        </Button>
+                      </Form.Item>
+                      <Form.Item>
+                        <Button
+                          onClick={handleRotateRight}
+                          loading={loading}
+                          style={{ background: "52c41a", color: "fff" }}
+                        >
+                          Xoay phải
+                        </Button>
+                      </Form.Item>
+                    </Space>
+                    <Space align="center" style={{ display: "flex", justifyContent: "center" }}>
+                      <Form.Item>
                         <Button onClick={handleGetAI} loading={loading}>
                           Sinh box
                         </Button>
                       </Form.Item>
                       <Form.Item>
-                        <Button onClick={handleRotateLeft} loading={loading} style={{ background: "52c41a", color: "fff" }}>
-                          Xoay trái
-                        </Button>
-                      </Form.Item>
-                      <Form.Item>
-                        <Button onClick={handleRotateRight} loading={loading} style={{ background: "52c41a", color: "fff" }}>
-                          Xoay phải
+                        <Button onClick={handleGenerateCaption} loading={loading}>
+                          Sinh caption AI
                         </Button>
                       </Form.Item>
                       <Form.Item>

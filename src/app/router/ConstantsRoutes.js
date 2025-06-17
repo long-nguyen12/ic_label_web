@@ -89,7 +89,7 @@ export const ConstantsRoutes = [
   },
   {
     path: URL.MENU.INFOMATION,
-    menuName: "Thông tin phần mềm",
+    menuName: "Hướng dẫn sử dụng",
     component: Information,
     icon: renderIcon(<CheckIcon />),
     permission: [],

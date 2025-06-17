@@ -168,3 +168,15 @@ export function rotateImageRightById(id, angle) {
     });
 }
 
+export function generateCaptionById(id) {
+  return axios
+    .get(API.GALLERY_GENERATE_CAPTION.format(id))
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}

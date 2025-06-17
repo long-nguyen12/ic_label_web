@@ -3,11 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    
     "build:clean": "rimraf ./build",
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
-    "start": "cross-env NODE_ENV=development node --max-old-space-size=4096 server",
-
+    "start": "cross-env NODE_ENV=development node --openssl-legacy-provider --max-old-space-size=4096 server",
     "start:web": "cross-env NODE_ENV=production node --max-old-space-size=4096 server",
     "start:prod": "cross-env NODE_ENV=production node server",
     "start:production": "npm run build:clean && npm run build && npm run start:prod"
@@ -25,7 +23,6 @@
     "@ant-design/icons": "4.3.0",
     "@ant-design/plots": "^1.0.7",
     "@babel/polyfill": "7.4.3",
-    "@cycjimmy/jsmpeg-player": "^6.0.2",
     "antd": "4.16.0",
     "axios": "0.21.1",
     "bootstrap": "4.5.3",

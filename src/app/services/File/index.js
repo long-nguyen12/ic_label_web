@@ -62,3 +62,17 @@ export function uploadFile(file) {
       return null;
     });
 }
+
+export function getDocumentFile() {
+  return axios
+    .get(API.DOCUMENT_FILE)
+    .then((response) => {
+      const data = convertSnakeCaseToCamelCase(response?.data);
+      return data;
+    })
+    .catch((error) => {
+      console.log("Error fetching document file:", error);
+      renderMessageError(error);
+      return null;
+    });
+}
