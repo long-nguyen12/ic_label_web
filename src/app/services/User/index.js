@@ -171,3 +171,15 @@ export function getAccessToken(refreshToken) {
     });
 }
 
+export function generateUserPassword(id) {
+  return axios
+    .get(API.GENERATE_USER_PASSWORD.format(id))
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}

@@ -16,6 +16,7 @@ import "./UserDetail.scss";
 import Loading from "@components/Loading";
 import Filter from "@components/Filter";
 import axios from "axios";
+import { generateUserPassword } from "../../../services/User";
 
 const layoutCol = { xs: 24, md: 8, xl: 8 };
 const labelCol = { xs: 24, md: 24, xl: 24 };
@@ -53,14 +54,14 @@ function UserDetail({ myInfo }) {
     await axios.all(apiRequestAll).then(
       axios.spread(function (userDetail, listPosition) {
         if (userDetail) {
-          console.log(userDetail)
+          console.log(userDetail);
           formCreateUser.setFieldsValue({
             userFullName: userDetail.userFullName,
             userMobi: userDetail.userMobi,
             userEmail: userDetail.userEmail,
             userAdd: userDetail.userAdd,
             userNote: userDetail.userNote,
-            userRole: userDetail.userClassify._id
+            userRole: userDetail.userClassify._id,
           });
           setUserDetail(userDetail);
         }
@@ -134,6 +135,15 @@ function UserDetail({ myInfo }) {
     }
   }
 
+  async function handleResetPassword() {
+    setLoading(true);
+    const api = await generateUserPassword(userDetail._id);
+    if (api) {
+      toast(CONSTANTS.SUCCESS, "Cấp lại mật khẩu cho người dùng thành công!");
+    }
+    setLoading(false);
+  }
+
   return (
     <>
       {isMobile ? (
@@ -152,7 +162,7 @@ function UserDetail({ myInfo }) {
               <Popconfirm
                 title={t(userDetail?.active ? "Huỷ kích hoạt người dùng này?" : "Kích hoạt người dùng này?")}
                 onConfirm={handleDeactiveUser}
-              okText={t("Xác nhận")}
+                okText={t("Xác nhận")}
                 cancelText={t("HUY")}
                 okButtonProps={{ type: "danger" }}
               >
@@ -282,7 +292,7 @@ function UserDetail({ myInfo }) {
                 type="primary"
                 className="mr-2"
                 icon={<RedoOutlined style={{ fontSize: 15 }} />}
-                onClick={() => formCreateUser.resetFields()}
+                onClick={handleResetPassword}
               >
                 Cấp lại mật khẩu
               </Button>
@@ -305,4 +315,3 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, null)(UserDetail);
-
