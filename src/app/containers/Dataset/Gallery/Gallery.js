@@ -223,13 +223,22 @@ const Gallery = (props) => {
       const apiResponse = await generateCaptionById(imageList[currentIndex]._id || imageList[currentIndex].id);
       if (apiResponse) {
         const generatedCaptions = apiResponse.captions.map((caption) => ({
-          caption: caption,
-          segment: "",
+          caption: caption || "",
         }));
-        formCreateCaptions.setFieldsValue({
-          image_caption: generatedCaptions,
-        });
-        toast(CONSTANTS.SUCCESS, "Sinh caption thành công!");
+        const generatedSegmentCaptions = apiResponse.segment.map((caption) => ({
+          segment: caption || "",
+        }));
+        if (generatedCaptions.length === generatedSegmentCaptions.length) {
+          for (let i = 0; i < generatedCaptions.length; i++) {
+            generatedCaptions[i].segment = generatedSegmentCaptions[i].segment;
+          }
+          formCreateCaptions.setFieldsValue({
+            image_caption: generatedCaptions,
+          });
+          toast(CONSTANTS.SUCCESS, "Sinh caption thành công!");
+        } else {
+          toast(CONSTANTS.ERROR, "Sinh caption thất bại!");
+        }
       }
     } catch (error) {
       toast(CONSTANTS.ERROR, "Sinh caption thất bại!");
