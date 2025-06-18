@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
-import { Divider, Typography, Row, Button, Upload, message } from "antd";
-const { Title, Paragraph, Text, Link } = Typography;
-import { connect } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { NavLink, useHistory } from "react-router-dom";
 import Loading from "@components/Loading";
+import { Button, Col, Row, Typography, Upload, message } from "antd";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 
-import { CONSTANTS, USER_TYPE } from "@constants";
 import { UploadOutlined } from "@ant-design/icons";
+import { USER_TYPE } from "@constants";
 import axios from "axios";
+import { Document, Page, setOptions } from "react-pdf";
 import { API } from "../../../constants/API";
+import BASE_URL from "../../../constants/BASE_URL";
 import { getDocumentFile } from "../../services/File";
 
+setOptions({
+  cMapUrl: "cmaps/",
+  cMapPacked: true,
+});
 const permitted_roles = [USER_TYPE.ADMIN.code, USER_TYPE.UPLOAD.code];
 
 function Information({ myInfo }) {
-  let history = useHistory();
-  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState(null);
-  const [document, setDocument] = useState(null);
+  const [numPages, setNumPages] = useState();
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
 
   useEffect(() => {
     getDocument();
@@ -30,12 +37,12 @@ function Information({ myInfo }) {
   async function getDocument() {
     try {
       setLoading(true);
-      const response = getDocumentFile();
-      if (response.status === 200) {
-        setDocument(response.data);
+      const response = await getDocumentFile();
+      if (response) {
+        const pdf = `${BASE_URL.BASE_URL}/${response?.filePath}`;
+        setPdfUrl(pdf);
       }
     } catch (error) {
-      console.error("Error fetching document:", error);
       message.error("Không thể tải tài liệu hướng dẫn!");
     } finally {
       setLoading(false);
@@ -49,17 +56,6 @@ function Information({ myInfo }) {
 
   const handleRemove = () => {
     setPdfUrl(null);
-    setFileList([]);
-  };
-
-  const handleChange = ({ fileList }) => {
-    setFileList(fileList.slice(-1));
-    if (fileList.length > 0 && fileList[0].originFileObj) {
-      const url = URL.createObjectURL(fileList[0].originFileObj);
-      setPdfUrl(url);
-    } else {
-      setPdfUrl(null);
-    }
   };
 
   const beforeUpload = (file) => {
@@ -72,8 +68,9 @@ function Information({ myInfo }) {
 
   const handleUpload = async (options) => {
     const { file, onSuccess, onError, onProgress } = options;
+    setLoading(true);
+    setPdfUrl(null);
     try {
-      setLoading(true);
       const formData = new FormData();
       formData.append("file", file);
       const config = {
@@ -86,15 +83,25 @@ function Information({ myInfo }) {
         },
       };
       const response = await axios.post(API.UPLOAD_DOCUMENT, formData, config);
-      onSuccess(response.data, file);
+      // onSuccess(response.data, file);
       if (response.status === 200) {
         message.success("Đã tải lên hướng dẫn thành công thành công!");
-        setDocument(response.data);
+        await getDocument();
       }
       setLoading(false);
     } catch (error) {
-      onError(error);
+      message.error("Không thể tải lên tài liệu hướng dẫn!");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  function onPageRenderSuccess(page) {}
+
+  const pageProps = {
+    className: "custom-classname-page",
+    onClick: (event, page) => {},
+    onRenderSuccess: onPageRenderSuccess,
   };
 
   return (
@@ -106,7 +113,6 @@ function Information({ myInfo }) {
               accept=".pdf"
               fileList={fileList}
               beforeUpload={beforeUpload}
-              onChange={handleChange}
               onRemove={handleRemove}
               customRequest={handleUpload}
               maxCount={1}
@@ -117,7 +123,22 @@ function Information({ myInfo }) {
           )}
         </Row>
       </CustomBreadcrumb>
-      <Loading active={loading} layoutBackground></Loading>
+      <Loading active={loading} layoutBackground>
+        {pdfUrl && (
+          <Col align="center">
+            <Document file={pdfUrl} loading={"Đang tải dữ liệu"} onLoadSuccess={onDocumentLoadSuccess}>
+              {Array.from(new Array(numPages), (el, index) => (
+                <Page
+                  {...pageProps}
+                  inputRef={pageNumber === index + 1 ? (ref) => ref && ref.scrollIntoView() : null}
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                />
+              ))}
+            </Document>
+          </Col>
+        )}
+      </Loading>
     </>
   );
 }
