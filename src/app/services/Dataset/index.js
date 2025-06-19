@@ -119,6 +119,19 @@ export function getAllCaptionImages() {
     });
 }
 
+export function getAllActiveImages() {
+  return axios
+    .get(API.GALLERY_IMAGES)
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
+
 export function downloadAnnotationById(id) {
   return axios
     .get(API.DATASET_ANNOTATION.format(id), {

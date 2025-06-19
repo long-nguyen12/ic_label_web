@@ -59,6 +59,7 @@ export const API = {
   GALLERY: "/api/gallery",
   GENERATE_GALLERY_AI: "/api/gallery/generate-ai-image/{0}",
 
+  GALLERY_IMAGES: "/api/gallery/images/all",
   GALLERY_CAPTION: "/api/gallery/all",
   GALLERY_ID: "/api/gallery/{0}",
   GALLERY_ROTATE_LEFT: "/api/gallery/rotate-left/{0}?angle={1}",

@@ -61,7 +61,7 @@ function Information({ myInfo }) {
   const beforeUpload = (file) => {
     const isPdf = file.type === "application/pdf";
     if (!isPdf) {
-      message.error("Chỉ cho phép upload file PDF!");
+      message.error("Chỉ cho phép upload file PDF");
     }
     return isPdf || Upload.LIST_IGNORE;
   };
@@ -85,12 +85,12 @@ function Information({ myInfo }) {
       const response = await axios.post(API.UPLOAD_DOCUMENT, formData, config);
       // onSuccess(response.data, file);
       if (response.status === 200) {
-        message.success("Đã tải lên hướng dẫn thành công thành công!");
+        message.success("Đã tải lên hướng dẫn thành công thành công");
         await getDocument();
       }
       setLoading(false);
     } catch (error) {
-      message.error("Không thể tải lên tài liệu hướng dẫn!");
+      message.error("Không thể tải lên tài liệu hướng dẫn");
     } finally {
       setLoading(false);
     }

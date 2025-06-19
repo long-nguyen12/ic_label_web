@@ -124,6 +124,26 @@ function CreateDataset({
     return arrConvert;
   }
 
+  function handleCheckFileType(file) {
+    const allowedTypes = [
+      "application/zip",
+      "application/x-zip-compressed",
+      "application/x-rar-compressed",
+      "application/x-7z-compressed",
+      "application/x-tar",
+      "application/gzip",
+    ];
+    const allowedExtensions = [".zip", ".rar", ".7z", ".tar", ".gz"];
+
+    const fileExt = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+    const isCompressed = allowedTypes.includes(file.type) || allowedExtensions.includes(fileExt);
+
+    if (!isCompressed) {
+      message.error("Chỉ cho phép upload file nén (.zip, .rar)");
+    }
+    return isCompressed || Upload.LIST_IGNORE;
+  }
+
   return (
     <>
       <CustomModal
@@ -192,17 +212,20 @@ function CreateDataset({
               <p className="ant-upload-text">Bấm hoặc kéo file vào để upload file</p>
               <p className="ant-upload-hint">Chỉ nhận file định dạng .zip hoặc .rar</p>
             </Dragger> */}
-            <Upload
-              {...uploadProps}
-              accept=".zip, .rar"
-              customRequest={handleUpload}
-              multiple={false}
-              fileList={fileList}
-              onChange={({ fileList }) => handleChangeFileList(fileList)}
-              showUploadList={{ showRemoveIcon: true }}
-            >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
+            <Row className="mt-2" align="middle" justify="center" style={{ width: "100%" }}>
+              <Upload
+                {...uploadProps}
+                accept=".zip, .rar"
+                beforeUpload={handleCheckFileType}
+                customRequest={handleUpload}
+                multiple={false}
+                fileList={fileList}
+                onChange={({ fileList }) => handleChangeFileList(fileList)}
+                showUploadList={{ showRemoveIcon: true }}
+              >
+                <Button icon={<UploadOutlined />}>Chọn tệp dataset</Button>
+              </Upload>
+            </Row>
           </Row>
         </Form>
       </CustomModal>
