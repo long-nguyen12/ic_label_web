@@ -72,8 +72,6 @@ function DatasetDetail({ myInfo }) {
     query.dataset_id = id;
     const apiResponse = await getAllImages(page, 0, query);
     if (apiResponse) {
-      console.log("image list", apiResponse);
-
       setDatasetNoPage({
         dataRes: apiResponse.docs,
         currentPage: page,

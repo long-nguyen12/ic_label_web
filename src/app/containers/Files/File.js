@@ -61,7 +61,6 @@ export const renderDocAndImg = (dangkyRes, type_file) => {
   let dataFile = getDataFile(dangkyRes);
   let heightImg = dangkyRes.loaimauketqua === "2" ? 141 : dangkyRes.loaimauketqua === "4" ? 116 : 0;
   let widthImg = dangkyRes.loaimauketqua === "2" ? 191 : dangkyRes.loaimauketqua === "4" ? 173 : 0;
-  console.log(dataFile, "dataFile");
 
   loadFile(pathFile, function (error, content) {
     if (error) {

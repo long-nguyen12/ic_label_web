@@ -1,17 +1,15 @@
-import { CheckIcon, FileIcon, UserIcon, HomeIcon } from "@app/components/Icons";
+import { CheckIcon, FileIcon, UserIcon, HomeIcon, DatasetIcon, HistoryIcon } from "@app/components/Icons";
+import { DatabaseOutlined, HistoryOutlined, HomeOutlined, ProfileOutlined, UserOutlined } from "@ant-design/icons";
 import Information from "@containers/Information";
 import Position from "@containers/Position";
 import PositionDetail from "@containers/Position/PositionDetail/PositionDetail";
 import { URL } from "@url";
 import React, { lazy } from "react";
-import UploadScreen from "../containers/Upload";
 import User from "../containers/User";
 import Gallery from "../containers/Dataset/Gallery/Gallery";
 import UserDetail from "../containers/User/UserDetail/UserDetail";
 
 const MyInfo = lazy(() => import("@containers/MyInfo/MyInfo"));
-const Account = lazy(() => import("@containers/Account/index"));
-import { InboxOutlined } from "@ant-design/icons";
 import Dashboard from "../containers/Dashboard";
 import Dataset from "../containers/Dataset";
 import History from "../containers/History";
@@ -37,21 +35,25 @@ export const ConstantsRoutes = [
     path: URL.MENU.DASHBOARD,
     menuName: "Dashboard",
     component: Dashboard,
-    icon: renderIcon(<HomeIcon />),
+    icon: <HomeOutlined />,
     permission: [],
   },
   // {
-  //   path: URL.MENU.DATASET,
-  //   menuName: "Tải lên dataset",
-  //   component: UploadScreen,
-  //   icon: renderIcon(<FileIcon />),
+  //   path: URL.MENU.DATASET_MANAGEMENT,
+  //   menuName: "Quản lý dataset",
+  //   component: Dataset,
+  //   icon: renderIcon(<DatasetIcon />),
   //   permission: [],
+  //   children: [
+  //     { path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: DatasetDetail, permission: [] },
+  //     { path: URL.DATASET_ID.format(":id"), component: DatasetEdit, permission: [] },
+  //   ],
   // },
   {
     path: URL.MENU.DATASET_MANAGEMENT,
     menuName: "Quản lý dataset",
     component: Dataset,
-    icon: renderIcon(<FileIcon />),
+    icon: <DatabaseOutlined />,
     permission: [],
     children: [
       { path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: DatasetDetail, permission: [] },
@@ -62,7 +64,7 @@ export const ConstantsRoutes = [
     path: URL.USER_MANAGEMENT,
     menuName: "Quản lí người dùng",
     component: User,
-    icon: renderIcon(<UserIcon />),
+    icon: <UserOutlined />,
     permission: ["admin"],
     children: [{ path: URL.USER_MANAGEMENT_ID.format(":id"), component: UserDetail, permission: ["admin"] }],
   },
@@ -70,7 +72,7 @@ export const ConstantsRoutes = [
     path: URL.POSITION,
     menuName: "Quản lý chức vụ",
     component: Position,
-    icon: renderIcon(<FileIcon />),
+    icon: <ProfileOutlined />,
     children: [
       {
         path: URL.POSITION_ID.format(":id"),
@@ -84,20 +86,20 @@ export const ConstantsRoutes = [
     path: URL.MENU.HISTORY,
     menuName: "Lịch sử hoạt động",
     component: History,
-    icon: renderIcon(<CheckIcon />),
+    icon: <HistoryOutlined />,
     permission: [],
   },
   {
     path: URL.MENU.INFOMATION,
     menuName: "Hướng dẫn sử dụng",
     component: Information,
-    icon: renderIcon(<CheckIcon />),
+    icon: <ProfileOutlined />,
     permission: [],
   },
 
   // not render in menu
   { path: URL.MY_INFO, breadcrumbName: "Thông tin cá nhân", component: MyInfo, permission: [] },
-  { 
+  {
     path: URL.GALLGERY,
     breadcrumbName: "Chi tiết hình ảnh",
     children: [
@@ -107,6 +109,5 @@ export const ConstantsRoutes = [
         permission: [],
       },
     ],
-   },
+  },
 ];
-
