@@ -172,21 +172,9 @@ export const PAGINATION_CONFIG = Object.assign(
   },
 );
 
-// export const PAGINATION_MODAL = Object.assign({}, PAGINATION_CONFIG, {
-//   pageSizeOptions: [5, 10, 15],
-//   defaultPageSize: 5,
-// });
-
 export const KIEM_TRA = 'KIEM_TRA';
 export const SUA_CHUA_BAO_DUONG = 'SUA_CHUA_BAO_DUONG';
 export const DO_THONG_SO = 'DO_THONG_SO';
-
-// export const EXTRA_FIELD = {
-//   User: { code: 'User', label: 'Người dùng' },
-//   ViTri: { code: 'ViTri', label: 'Vị trí' },
-//   CongTrinh: { code: 'CongTrinh', label: 'Công trình' },
-//   DuongDay: { code: 'DuongDay', label: 'Đường dây' },
-// };
 
 export const KIEU_DU_LIEU = {
   VAN_BAN: { code: 'VAN_BAN', label: 'Văn bản' },

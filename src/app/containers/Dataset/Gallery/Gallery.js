@@ -20,6 +20,7 @@ import CustomSkeleton from "@components/CustomSkeleton";
 import { useLocation } from "react-router-dom";
 import Loading from "@components/Loading";
 import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import ImageWithBoundingBoxes from "./BoundingBox";
 
 const layoutCol = { xs: 24, md: 24, xl: 24, xxl: 24 };
 const labelCol = { xs: 24 };
@@ -31,7 +32,7 @@ const Gallery = (props) => {
   let history = useHistory();
   const { t } = useTranslation();
   const [linkImage, setLinkImage] = useState(null);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [describe, setDescribe] = useState({
     image_caption: [
       { caption: "", segment: "" },
@@ -41,6 +42,7 @@ const Gallery = (props) => {
       { caption: "", segment: "" },
     ],
   });
+  const [imgDisplaySize, setImgDisplaySize] = useState({ width: 1, height: 1 });
   const submitRef = useRef();
   const formRef = useRef(null);
   const params = Object.fromEntries(new URLSearchParams(window.location.search));
@@ -287,7 +289,7 @@ const Gallery = (props) => {
       <Loading active={loading} layoutBackground>
         <Row gutter={16}>
           <Col span={12}>
-            {linkImage && (
+            {/* {linkImage && (
               <Image
                 width="100%"
                 src={linkImage}
@@ -295,8 +297,69 @@ const Gallery = (props) => {
                 style={{ objectFit: "cover", borderRadius: 8 }}
                 preview={true}
               />
-            )}
-            {data?.imageDetection ? (
+            )} */}
+            {/* {linkImage && (
+              <div style={{ position: "relative", width: "100%" }}>
+                <Image
+                  width="100%"
+                  src={linkImage}
+                  alt="dataset-img"
+                  style={{ objectFit: "cover" }}
+                  preview={false}
+                  onLoad={(e) => {
+                    console.log("Image loaded", e.target.offsetWidth, e.target.offsetHeight);
+                    setImgDisplaySize({
+                      width: e.target.offsetWidth,
+                      height: e.target.offsetHeight,
+                      naturalWidth: e.target.naturalWidth,
+                      naturalHeight: e.target.naturalHeight,
+                    });
+                  }}
+                />
+                {data &&
+                  data?.imageBbox?.map((box, idx) => {
+                    const boundingBox = box.box;
+                    const [x, y, w, h] = boundingBox;
+                    const ratioX = imgDisplaySize.width / (imgDisplaySize.naturalWidth || 1);
+                    const ratioY = imgDisplaySize.height / (imgDisplaySize.naturalHeight || 1);
+                    return (
+                      <div
+                        key={idx}
+                        style={{
+                          position: "absolute",
+                          left: `${x * ratioX}px`,
+                          top: `${y * ratioY}px`,
+                          width: `${w * ratioX}px`,
+                          height: `${h * ratioY}px`,
+                          border: `2px solid ${box.labelColor}`,
+                          borderRadius: 4,
+                          pointerEvents: "none",
+                          boxSizing: "border-box",
+                          color: `${box.labelColor}`,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        <span
+                          style={{
+                            background: `${box.labelColor}`,
+                            color: "#fff",
+                            fontSize: 12,
+                            padding: "0 4px",
+                            borderRadius: 2,
+                            position: "absolute",
+                            left: 0,
+                            top: -18,
+                          }}
+                        >
+                          {box.labelName}
+                        </span>
+                      </div>
+                    );
+                  })}
+              </div>
+            )} */}
+            {linkImage && <ImageWithBoundingBoxes src={linkImage} boxes={data?.imageBbox || []} />}
+            {/* {data?.imageDetection ? (
               <>
                 <Space direction="vertical" size={16} style={{ width: "100%" }} />
                 <Image
@@ -307,7 +370,7 @@ const Gallery = (props) => {
                   preview={true}
                 />
               </>
-            ) : null}
+            ) : null} */}
           </Col>
           <Col span={12}>
             <Form

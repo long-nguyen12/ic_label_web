@@ -92,7 +92,6 @@ function DatasetDetail({ myInfo }) {
     query.dataset_id = id;
     const apiResponse = await getAllImages(page, limit, query);
     if (apiResponse) {
-      console.log("paginate image list", apiResponse);
       setDatasets({
         dataRes: apiResponse.docs,
         currentPage: page,

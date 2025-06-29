@@ -15,6 +15,8 @@ import Dataset from "../containers/Dataset";
 import History from "../containers/History";
 import DatasetDetail from "../containers/Dataset/DatasetDetail/DatasetDetail";
 import DatasetEdit from "../containers/Dataset/DatasetEdit/DatasetEdit";
+import Label from "../containers/Label";
+import LabelDetail from "../containers/Label/PositionDetail/LabelDetail";
 
 function renderIcon(icon) {
   return (
@@ -38,17 +40,6 @@ export const ConstantsRoutes = [
     icon: <HomeOutlined />,
     permission: [],
   },
-  // {
-  //   path: URL.MENU.DATASET_MANAGEMENT,
-  //   menuName: "Quản lý dataset",
-  //   component: Dataset,
-  //   icon: renderIcon(<DatasetIcon />),
-  //   permission: [],
-  //   children: [
-  //     { path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: DatasetDetail, permission: [] },
-  //     { path: URL.DATASET_ID.format(":id"), component: DatasetEdit, permission: [] },
-  //   ],
-  // },
   {
     path: URL.MENU.DATASET_MANAGEMENT,
     menuName: "Quản lý dataset",
@@ -59,6 +50,14 @@ export const ConstantsRoutes = [
       { path: URL.DATASET_MANAGEMENT_ID.format(":id"), component: DatasetDetail, permission: [] },
       { path: URL.DATASET_ID.format(":id"), component: DatasetEdit, permission: [] },
     ],
+  },
+  {
+    path: URL.MENU.LABEL,
+    menuName: "Quản lý nhãn",
+    component: Label,
+    icon: <DatabaseOutlined />,
+    permission: [],
+    children: [{ path: URL.LABEL_DETAIL.format(":id"), component: LabelDetail, permission: ["admin"] }],
   },
   {
     path: URL.USER_MANAGEMENT,

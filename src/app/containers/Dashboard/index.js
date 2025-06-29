@@ -5,6 +5,7 @@ import { getAllDataset, getAllCaptionImages, getAllActiveImages } from "@app/ser
 import { getAllUser } from "@app/services/User";
 const { Title, Paragraph, Text, Link } = Typography;
 import Loading from "@components/Loading";
+import axios from "axios";
 
 export default function Dashboard() {
   const [datasetCount, setDatasetCount] = useState(0);
@@ -16,16 +17,16 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const [datasetRes, userRes, captionRes, imageRes, compressedRes] = await Promise.all([
-        getAllDataset(),
-        getAllUser(),
-        getAllCaptionImages(),
-        getAllActiveImages(),
-      ]);
-      setDatasetCount(datasetRes?.totalDocs || 0);
-      setUserCount(userRes?.totalDocs || 0);
-      setCaptionCount(captionRes?.length || 0);
-      setImageCount(imageRes?.length || 0);
+      const apiRequestAll = [getAllDataset(), getAllUser(), getAllCaptionImages(), getAllActiveImages()];
+      await axios.all(apiRequestAll).then(
+        axios.spread(function (datasetRes, userRes, captionRes, imageRes) {
+          setDatasetCount(datasetRes?.totalDocs || 0);
+          setUserCount(userRes?.totalDocs || 0);
+          setCaptionCount(captionRes?.length || 0);
+          setImageCount(imageRes?.length || 0);
+          setLoading(false);
+        })
+      );
       setLoading(false);
     }
     fetchData();
