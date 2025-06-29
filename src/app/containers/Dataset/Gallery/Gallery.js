@@ -51,6 +51,15 @@ const Gallery = (props) => {
   useEffect(() => {
     if (location?.state?.image_list) {
       setImageList(location.state.image_list);
+      setDescribe({
+        image_caption: [
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+        ],
+      })
     }
   }, [location?.state?.image_list]);
 
@@ -58,6 +67,15 @@ const Gallery = (props) => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
     if (params.index !== undefined) {
       setCurrentIndex(Number(params.index));
+      setDescribe({
+        image_caption: [
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+        ],
+      })
     }
   }, [location.search]);
 

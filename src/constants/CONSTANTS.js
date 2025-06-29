@@ -126,7 +126,7 @@ export const TOAST_MESSAGE = {
 };
 
 export const RULES = {
-  REQUIRED: { required: true, message: 'Không được để trống', langCode: 'REQUIRED' },
+  REQUIRED: { required: true, pattern: '^(?!\\s*$).+', message: 'Không được để trống', langCode: 'REQUIRED' },
   NUMBER: { pattern: '^[0-9]+$', message: 'Không phải là số', langCode: 'NUMBER' },
   PHONE: { pattern: '^[0-9]+$', len: 10, message: 'Số điện thoại không hợp lệ', langCode: 'PHONE' },
   CMND: { required: true, pattern: '^[0-9]+$', message: 'Số CMND/CCCD không hợp lệ' },
