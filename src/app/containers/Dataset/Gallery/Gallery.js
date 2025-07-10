@@ -246,7 +246,8 @@ const Gallery = (props) => {
   const handleGenerateCaption = async () => {
     setLoading(true);
     try {
-      const apiResponse = await generateCaptionById(imageList[currentIndex]._id || imageList[currentIndex].id);
+      // const apiResponse = await generateCaptionById(imageList[currentIndex]._id || imageList[currentIndex].id);
+      const apiResponse = await generateCaptionById(linkImage);
       if (apiResponse) {
         const generatedCaptions = apiResponse.captions.map((caption) => ({
           caption: caption || "",
