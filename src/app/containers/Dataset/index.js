@@ -152,12 +152,12 @@ function Dataset({ myInfo }) {
     },
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Tổng số ảnh đã gán nhãn"}</div>,
-      dataIndex: "allImages",
+      dataIndex: "captionedImages",
       width: "30%",
       align: "center",
       render: (value, record) => {
-        if (!record?.captionedImages || !record?.allImages) return <Tag color="red">0/0</Tag>;
-        else if (record?.captionedImages.length === record?.allImages.length) {
+        if (!record?.captionedImages || !record?.totalImages) return <Tag color="red">0/0</Tag>;
+        else if (record?.captionedImages === record?.totalImages) {
           return (
             <Tag color="green">
               <div align="center">{value}</div>
@@ -167,7 +167,7 @@ function Dataset({ myInfo }) {
         return (
           <>
             <Tag color="red">
-              {record?.captionedImages.length}/{record?.allImages.length}
+              {record?.captionedImages}/{record?.totalImages}
             </Tag>
           </>
         );

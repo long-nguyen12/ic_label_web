@@ -16,7 +16,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const [datasetRes, userRes, captionRes, imageRes, compressedRes] = await Promise.all([
+      const [datasetRes, userRes, captionRes, imageRes] = await Promise.all([
         getAllDataset(),
         getAllUser(),
         getAllCaptionImages(),
@@ -24,8 +24,8 @@ export default function Dashboard() {
       ]);
       setDatasetCount(datasetRes?.totalDocs || 0);
       setUserCount(userRes?.totalDocs || 0);
-      setCaptionCount(captionRes?.length || 0);
-      setImageCount(imageRes?.length || 0);
+      setCaptionCount(captionRes?.totalCaptionedImages || 0);
+      setImageCount(imageRes?.totalImages || 0);
       setLoading(false);
     }
     fetchData();
