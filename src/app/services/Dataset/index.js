@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { AI_BASE_URL } from "../../../constants/BASE_URL";
 import { API } from "@api";
 import {
   convertCamelCaseToSnakeCase,
@@ -181,9 +181,9 @@ export function rotateImageRightById(id, angle) {
     });
 }
 
-export function generateCaptionById(id) {
+export function generateCaptionById(url) {
   return axios
-    .get(API.GALLERY_GENERATE_CAPTION.format(id))
+    .post(AI_BASE_URL + API.GALLERY_GENERATE_CAPTION, convertCamelCaseToSnakeCase({ url }))
     .then((response) => {
       if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
       return null;

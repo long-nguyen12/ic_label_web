@@ -53,6 +53,9 @@ const Gallery = (props) => {
   useEffect(() => {
     if (location?.state?.image_list) {
       setImageList(location.state.image_list);
+      (async () => {
+        handleGetFile(imageList[currentIndex]._id || imageList[currentIndex].id);
+      })();
     }
   }, [location?.state?.image_list]);
 
@@ -60,6 +63,9 @@ const Gallery = (props) => {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
     if (params.index !== undefined) {
       setCurrentIndex(Number(params.index));
+      (async () => {
+        handleGetFile(imageList[currentIndex]._id || imageList[currentIndex].id);
+      })();
     }
   }, [location.search]);
 
@@ -78,7 +84,7 @@ const Gallery = (props) => {
       setData(response);
       const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
       const imgUrl = `${BASE_URL}/${datasetPath}/${response.imageName}`;
-      if (response.imageCaption && response.imageCaption.length > 0) {
+      if (response?.imageCaption && response?.imageCaption?.length > 0) {
         formCreateCaptions.setFieldsValue({
           image_caption: response.imageCaption,
         });
@@ -120,6 +126,16 @@ const Gallery = (props) => {
       const params = new URLSearchParams(location.search);
       params.set("index", newIndex);
       const nextImageId = imageList[newIndex]._id || imageList[newIndex].id;
+      setDescribe({
+        image_caption: [
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+        ],
+      });
+      formCreateCaptions.resetFields();
 
       history.replace({
         pathname: `/gallery/${nextImageId}${location.pathname.includes("?") ? "" : ""}`,
@@ -136,6 +152,16 @@ const Gallery = (props) => {
       const params = new URLSearchParams(location.search);
       params.set("index", newIndex);
       const nextImageId = imageList[newIndex]._id || imageList[newIndex].id;
+      setDescribe({
+        image_caption: [
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+          { caption: "", segment: "" },
+        ],
+      });
+      formCreateCaptions.resetFields();
 
       history.replace({
         pathname: `/gallery/${nextImageId}${location.pathname.includes("?") ? "" : ""}`,
@@ -222,7 +248,8 @@ const Gallery = (props) => {
   const handleGenerateCaption = async () => {
     setLoading(true);
     try {
-      const apiResponse = await generateCaptionById(imageList[currentIndex]._id || imageList[currentIndex].id);
+      // const apiResponse = await generateCaptionById(imageList[currentIndex]._id || imageList[currentIndex].id);
+      const apiResponse = await generateCaptionById(linkImage);
       if (apiResponse) {
         const generatedCaptions = apiResponse.captions.map((caption) => ({
           caption: caption || "",

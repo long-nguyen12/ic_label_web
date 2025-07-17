@@ -64,6 +64,7 @@ export const API = {
   GALLERY_ID: "/api/gallery/{0}",
   GALLERY_ROTATE_LEFT: "/api/gallery/rotate-left/{0}?angle={1}",
   GALLERY_ROTATE_RIGHT: "/api/gallery/rotate-right/{0}?angle={1}",
+  GALLERY_GENERATE_CAPTION: "/v1/api/image2label",
   GALLERY_GENERATE_CAPTION: "/api/gallery/generate-captions/{0}",
 
   LABEL_ALL: "/api/label",
