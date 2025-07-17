@@ -156,8 +156,7 @@ function Dataset({ myInfo }) {
       width: "30%",
       align: "center",
       render: (value, record) => {
-        if (!record?.captionedImages || !record?.totalImages) return <Tag color="red">0/0</Tag>;
-        else if (record?.captionedImages === record?.totalImages) {
+        if (record?.captionedImages === record?.totalImages) {
           return (
             <Tag color="green">
               <div align="center">{value}</div>
