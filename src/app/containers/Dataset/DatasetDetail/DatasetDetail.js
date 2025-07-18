@@ -246,7 +246,19 @@ function DatasetDetail({ myInfo }) {
                         // You can also call a function or dispatch an action here
                       }}
                     >
-                      <div style={{ position: "relative" }}>
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          height: 180,
+                          overflow: "hidden",
+                          borderRadius: 8,
+                          background: "#f5f5f5",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
                         {isEnoughCaptions && (
                           <CheckCircleTwoTone
                             twoToneColor="#52c41a"
@@ -259,12 +271,16 @@ function DatasetDetail({ myInfo }) {
                             }}
                           />
                         )}
-                        <Image
-                          width="100%"
+                        <img
                           src={imgUrl}
                           alt="dataset-img"
-                          style={{ objectFit: "cover", borderRadius: 8 }}
-                          preview={false}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            borderRadius: 8,
+                            display: "block",
+                          }}
                         />
                       </div>
                     </NavLink>
