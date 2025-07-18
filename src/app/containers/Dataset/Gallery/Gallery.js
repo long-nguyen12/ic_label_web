@@ -341,7 +341,7 @@ const Gallery = (props) => {
           okButtonProps={{ type: "danger" }}
         >
           <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-            {t("Xoá ảnh này")}
+            {t("Xoá ảnh")}
           </Button>
         </Popconfirm>
       </CustomBreadcrumb>
@@ -364,7 +364,7 @@ const Gallery = (props) => {
                 loading={loading}
                 style={{ background: "#52c41a", color: "#fff", marginRight: 8 }}
               >
-                Xoay phải
+                Xoay ảnh
               </Button>
               <Button onClick={handleGetAI} loading={loading}>
                 Sinh box
