@@ -9,6 +9,7 @@ import {
   rotateImageLeftById,
   rotateImageRightById,
   generateCaptionById,
+  generateSegmentCaption,
 } from "../../../services/Dataset/index";
 import { BASE_URL } from "../../../../constants/BASE_URL";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
@@ -274,6 +275,40 @@ const Gallery = (props) => {
     }
   };
 
+  const handleGenerateSegmentCaption = async () => {
+    setLoading(true);
+    try {
+      const data = formCreateCaptions.getFieldValue("image_caption");
+      let captions = data.map((item) => item.caption);
+      const apiResponse = await generateSegmentCaption({
+        caption: captions,
+      });
+      if (apiResponse) {
+        const generatedCaptions = captions.map((caption) => ({
+          caption: caption || "",
+        }));
+        const generatedSegmentCaptions = apiResponse.segments.map((caption) => ({
+          segment: caption || "",
+        }));
+        if (generatedCaptions.length === generatedSegmentCaptions.length) {
+          for (let i = 0; i < generatedCaptions.length; i++) {
+            generatedCaptions[i].segment = generatedSegmentCaptions[i].segment;
+          }
+          formCreateCaptions.setFieldsValue({
+            image_caption: generatedCaptions,
+          });
+          toast(CONSTANTS.SUCCESS, "Sinh segment words thành công!");
+        } else {
+          toast(CONSTANTS.ERROR, "Sinh segment words thất bại!");
+        }
+      }
+    } catch (error) {
+      toast(CONSTANTS.ERROR, "Sinh segment words thất bại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <CustomBreadcrumb breadcrumbLabel={"GÁN NHÃN DỮ LIỆU"}>
@@ -287,7 +322,7 @@ const Gallery = (props) => {
           {t("QUAY_LAI")}
         </Button>
         <Button className="mr-2" type="primary" ghost onClick={handleBack} disabled={currentIndex === 0}>
-          Ảnh trước đó
+          Ảnh trước
         </Button>
         <Button
           className="mr-2"
@@ -296,7 +331,7 @@ const Gallery = (props) => {
           onClick={handleNext}
           disabled={currentIndex === imageList.length - 1}
         >
-          Ảnh tiếp theo
+          Ảnh sau
         </Button>
         <Popconfirm
           title={t("Xoá ảnh này khỏi dataset?")}
@@ -323,6 +358,18 @@ const Gallery = (props) => {
                 preview={true}
               />
             )}
+            <Space className="mb-2 mt-1" align="center" style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                onClick={handleRotateRight}
+                loading={loading}
+                style={{ background: "#52c41a", color: "#fff", marginRight: 8 }}
+              >
+                Xoay phải
+              </Button>
+              <Button onClick={handleGetAI} loading={loading}>
+                Sinh box
+              </Button>
+            </Space>
             {data?.imageDetection ? (
               <>
                 <Space direction="vertical" size={16} style={{ width: "100%" }} />
@@ -350,7 +397,7 @@ const Gallery = (props) => {
                     {fields.map(({ key, name, ...restField }, index) => (
                       <div key={key}>
                         <CustomSkeleton
-                          label={t(`Caption ${index + 1}`)}
+                          label={t(`Mô tả ${index + 1}`)}
                           name={[name, "caption"]}
                           layoutCol={layoutCol}
                           labelCol={labelCol}
@@ -369,41 +416,20 @@ const Gallery = (props) => {
                         />
                       </div>
                     ))}
-
-                    <Space className="mt-4" align="center" style={{ display: "flex", justifyContent: "center" }}>
-                      <Form.Item>
-                        <Button
-                          onClick={handleRotateLeft}
-                          loading={loading}
-                          style={{ background: "52c41a", color: "fff" }}
-                        >
-                          Xoay trái
-                        </Button>
-                      </Form.Item>
-                      <Form.Item>
-                        <Button
-                          onClick={handleRotateRight}
-                          loading={loading}
-                          style={{ background: "52c41a", color: "fff" }}
-                        >
-                          Xoay phải
-                        </Button>
-                      </Form.Item>
-                    </Space>
                     <Space align="center" style={{ display: "flex", justifyContent: "center" }}>
                       <Form.Item>
-                        <Button onClick={handleGetAI} loading={loading}>
-                          Sinh box
-                        </Button>
-                      </Form.Item>
-                      <Form.Item>
                         <Button onClick={handleGenerateCaption} loading={loading}>
-                          Sinh caption AI
+                          Sinh mô tả
                         </Button>
                       </Form.Item>
                       <Form.Item>
-                        <Button type="primary" htmlType="submit" ref={submitRef}>
-                          Lưu Captions
+                        <Button onClick={handleGenerateSegmentCaption} loading={loading}>
+                          Sinh segment
+                        </Button>
+                      </Form.Item>
+                      <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading} ref={submitRef}>
+                          Lưu mô tả
                         </Button>
                       </Form.Item>
                     </Space>

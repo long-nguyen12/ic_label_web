@@ -193,3 +193,16 @@ export function generateCaptionById(url) {
       return null;
     });
 }
+
+export function generateSegmentCaption(captions) {
+  return axios
+    .post(AI_BASE_URL + API.GALLERY_GENERATE_SEGMENT, captions)
+    .then((response) => {
+      if (response.status === 200) return convertSnakeCaseToCamelCase(response?.data);
+      return null;
+    })
+    .catch((err) => {
+      renderMessageError(err);
+      return null;
+    });
+}
