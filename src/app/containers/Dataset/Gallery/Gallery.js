@@ -218,25 +218,6 @@ const Gallery = (props) => {
     }
   };
 
-  const handleRotateLeft = async () => {
-    setLoading(true);
-    try {
-      const apiResponse = await rotateImageLeftById(imageList[currentIndex]._id || imageList[currentIndex].id, 90);
-      if (!apiResponse) {
-        toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
-        return;
-      }
-      setData(apiResponse);
-      const datasetPath = apiResponse.datasetId?.datasetPath?.replace(/\\/g, "/");
-      const imgUrl = `${BASE_URL}/${datasetPath}/${apiResponse.imageName}?t=${Date.now()}`;
-      setLinkImage(imgUrl);
-    } catch (error) {
-      toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleRotateRight = async () => {
     setLoading(true);
     try {
@@ -245,7 +226,7 @@ const Gallery = (props) => {
         toast(CONSTANTS.ERROR, "Xoay ảnh thất bại!");
         return;
       }
-      setData(apiResponse);
+      // setData(apiResponse);
       const datasetPath = apiResponse.datasetId?.datasetPath?.replace(/\\/g, "/");
       const imgUrl = `${BASE_URL}/${datasetPath}/${apiResponse.imageName}?t=${Date.now()}`;
       setLinkImage(imgUrl);
