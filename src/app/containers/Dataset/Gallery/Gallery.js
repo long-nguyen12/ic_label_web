@@ -11,7 +11,7 @@ import {
   generateCaptionById,
   generateSegmentCaption,
 } from "../../../services/Dataset/index";
-import { BASE_URL } from "../../../../constants/BASE_URL";
+import { AI_BASE_URL, BASE_URL } from "../../../../constants/BASE_URL";
 import CustomBreadcrumb from "@components/CustomBreadcrumb";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -80,7 +80,12 @@ const Gallery = (props) => {
     setLoading(true);
     const response = await getGallery(imageId);
     if (response) {
-      setData(response);
+      let imageDetection = response.imageDetection;
+      if (imageDetection && !imageDetection.startsWith("http")) {
+        imageDetection = `${AI_BASE_URL}/v1/api/images/${imageDetection}`;
+      }
+      const resp = { ...response, imageDetection };
+      setData(resp);
       const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
       const imgUrl = `${BASE_URL}/${datasetPath}/${response.imageName}`;
       if (response?.imageCaption && response?.imageCaption?.length > 0) {
@@ -100,9 +105,16 @@ const Gallery = (props) => {
   const handleGetAI = async () => {
     setLoading(true);
     const response = await generateGalleryAI(id);
-    setData(response);
+    if (response) {
+      let imageDetection = response.imageDetection;
+      if (!imageDetection.startsWith("http")) {
+        imageDetection = `${AI_BASE_URL}/v1/api/images/${imageDetection}`;
+      }
+      const resp = { ...response, imageDetection };
+      setData(resp);
+      toast(CONSTANTS.SUCCESS, "Tạo bounding box cho ảnh thành công!");
+    }
     setLoading(false);
-    toast(CONSTANTS.SUCCESS, "Tạo bounding box cho ảnh thành công!");
   };
 
   const onFinish = async (values) => {
