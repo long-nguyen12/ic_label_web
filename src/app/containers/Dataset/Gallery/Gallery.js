@@ -51,9 +51,9 @@ const Gallery = ({ match: { params: { id } } }) => {
 
       const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
       const imgUrl = `${BASE_URL}/${datasetPath}/${response.imageName}`;
-      const imageDetection = response.imageDetection?.startsWith("http")
-        ? response.imageDetection
-        : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}`;
+      const imageDetection = response.imageDetection.startsWith("http")
+        ? `${response.imageDetection}?t=${Date.now()}`
+        : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}?t=${Date.now()}`;
 
       setImageData({ link: imgUrl, data: { ...response, imageDetection } });
       form.setFieldsValue({
@@ -216,7 +216,7 @@ const Gallery = ({ match: { params: { id } } }) => {
           icon={<i className="fa fa-arrow-left mr-1" />}
           onClick={() => history.goBack()}
         >
-          QUAY LẠI
+          Quay lại
         </Button>
         <Button
           className="mr-2"
@@ -225,7 +225,7 @@ const Gallery = ({ match: { params: { id } } }) => {
           onClick={() => handleNavigation("prev")}
           disabled={currentIndex === 0}
         >
-          Ảnh Trước
+          Ảnh trước
         </Button>
         <Button
           className="mr-2"
@@ -234,7 +234,7 @@ const Gallery = ({ match: { params: { id } } }) => {
           onClick={() => handleNavigation("next")}
           disabled={currentIndex === imageList.length - 1}
         >
-          Ảnh Sau
+          Ảnh sau
         </Button>
         <Popconfirm
           title="Xoá ảnh này khỏi dataset?"
@@ -244,7 +244,7 @@ const Gallery = ({ match: { params: { id } } }) => {
           okButtonProps={{ type: "danger" }}
         >
           <Button type="primary" danger icon={<DeleteOutlined style={{ fontSize: 15 }} />}>
-            Xoá Ảnh
+            Xoá ảnh
           </Button>
         </Popconfirm>
       </CustomBreadcrumb>
@@ -263,10 +263,10 @@ const Gallery = ({ match: { params: { id } } }) => {
             )}
             <Space className="my-2" style={{ display: "flex", justifyContent: "center" }}>
               <Button style={{ background: "#52c41a", color: "#fff" }} onClick={handleRotateRight} loading={loading}>
-                Xoay Ảnh
+                Xoay ảnh
               </Button>
               <Button onClick={handleGenerateAI} loading={loading}>
-                Tạo Box
+                Tạo box
               </Button>
             </Space>
             {imageData.data?.imageDetection && (
@@ -293,7 +293,7 @@ const Gallery = ({ match: { params: { id } } }) => {
                     {fields.map(({ key, name }, index) => (
                       <div key={key}>
                         <CustomSkeleton
-                          label={`Mô Tả ${index + 1}`}
+                          label={`Mô tả ${index + 1}`}
                           name={[name, "caption"]}
                           layoutCol={layoutCol}
                           labelCol={labelCol}
@@ -302,7 +302,7 @@ const Gallery = ({ match: { params: { id } } }) => {
                           form={form}
                         />
                         <CustomSkeleton
-                          label={`Segment Caption ${index + 1}`}
+                          label={`Segment caption ${index + 1}`}
                           name={[name, "segment"]}
                           layoutCol={layoutCol}
                           labelCol={labelCol}
@@ -314,13 +314,13 @@ const Gallery = ({ match: { params: { id } } }) => {
                     ))}
                     <Space style={{ display: "flex", justifyContent: "center" }}>
                       <Button onClick={handleGenerateCaption} loading={loading}>
-                        Tạo Mô Tả
+                        Tạo mô tả
                       </Button>
                       <Button onClick={handleGenerateSegmentCaption} loading={loading}>
-                        Tạo Segment
+                        Tạo segment
                       </Button>
                       <Button type="primary" htmlType="submit" loading={loading} ref={submitRef}>
-                        Lưu Mô Tả
+                        Lưu mô tả
                       </Button>
                     </Space>
                   </>
