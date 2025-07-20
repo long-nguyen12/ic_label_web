@@ -92,7 +92,6 @@ function DatasetDetail({ myInfo }) {
     query.dataset_id = id;
     const apiResponse = await getAllImages(page, limit, query);
     if (apiResponse) {
-      console.log("paginate image list", apiResponse);
       setDatasets({
         dataRes: apiResponse.docs,
         currentPage: page,
@@ -119,7 +118,7 @@ function DatasetDetail({ myInfo }) {
 
   return (
     <>
-      {isMobile ? (
+      {/* {isMobile ? (
         <Col>
           <CustomBreadcrumb breadcrumbLabel={"GÁN NHÃN DỮ LIỆU"}> </CustomBreadcrumb>
           <Row>
@@ -197,9 +196,9 @@ function DatasetDetail({ myInfo }) {
             style={{ marginTop: 16, textAlign: "center" }}
           />
         </Col>
-      ) : (
+      ) : ( */}
         <>
-          <CustomBreadcrumb breadcrumbLabel={"GÁN NHÃN DỮ LIỆU"}>
+          <CustomBreadcrumb breadcrumbLabel={"DATASET"}>
             <Button
               className="mr-2"
               type="primary"
@@ -216,7 +215,7 @@ function DatasetDetail({ myInfo }) {
               icon={<i className="fa fa-download mr-1" />}
               onClick={handleDownload}
             >
-              Tải về nhãn
+              Tải nhãn
             </Button>
           </CustomBreadcrumb>
           <div className="site-layout-background">
@@ -297,7 +296,7 @@ function DatasetDetail({ myInfo }) {
             />
           </div>
         </>
-      )}
+      {/* )} */}
     </>
   );
 }

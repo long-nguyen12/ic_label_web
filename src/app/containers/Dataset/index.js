@@ -114,7 +114,7 @@ function Dataset({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Tên dataset"}</div>,
       dataIndex: "datasetName",
-      width: "30%",
+      width: "20%",
       align: "center",
       render: (value, record) => {
         return (
@@ -127,7 +127,7 @@ function Dataset({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Mô tả"}</div>,
       dataIndex: "datasetNote",
-      width: "30%",
+      width: "20%",
       align: "center",
       render: (value, record) => {
         return (
@@ -140,7 +140,7 @@ function Dataset({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Người gán nhãn"}</div>,
       dataIndex: "annotatorId",
-      width: "30%",
+      width: "20%",
       align: "center",
       render: (value, record) => {
         return (
@@ -153,7 +153,7 @@ function Dataset({ myInfo }) {
     {
       title: <div style={{ textTransform: "capitalize" }}>{"Tổng số ảnh đã gán nhãn"}</div>,
       dataIndex: "captionedImages",
-      width: "30%",
+      width: "20%",
       align: "center",
       render: (value, record) => {
         if (record?.captionedImages === record?.totalImages) {
@@ -176,8 +176,8 @@ function Dataset({ myInfo }) {
       title: <div style={{ textTransform: "capitalize" }}>{t("THAO_TAC")}</div>,
       key: "action",
       align: "center",
-      width: "40%",
-      fixed: "right",
+      width: "20%",
+      // fixed: "right",
       render: (record) => {
         return (
           <Row align="center">

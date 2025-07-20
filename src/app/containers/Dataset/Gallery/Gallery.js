@@ -60,15 +60,18 @@ const Gallery = ({
 
         const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
         const imgUrl = `${BASE_URL}/${datasetPath}/${response.imageName}`;
-        const imageDetection = response.imageDetection.startsWith("http")
-          ? `${response.imageDetection}?t=${Date.now()}`
-          : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}?t=${Date.now()}`;
+        const imageDetection = response.imageDetection && response.imageDetection !== null
+          ? (response.imageDetection.startsWith("http")
+            ? `${response.imageDetection}?t=${Date.now()}`
+            : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}?t=${Date.now()}`)
+          : null;
 
         setImageData({ link: imgUrl, data: { ...response, imageDetection } });
         form.setFieldsValue({
           image_caption: response.imageCaption?.length > 0 ? response.imageCaption : initialCaptions,
         });
       } catch (error) {
+        console.log("Error fetching image:", error);
         toast(CONSTANTS.ERROR, "Lấy ảnh thất bại");
       } finally {
         setLoading(false);
@@ -235,24 +238,6 @@ const Gallery = ({
         >
           Quay lại
         </Button>
-        <Button
-          className="mr-2"
-          type="primary"
-          ghost
-          onClick={() => handleNavigation("prev")}
-          disabled={currentIndex === 0}
-        >
-          Ảnh trước
-        </Button>
-        <Button
-          className="mr-2"
-          type="primary"
-          ghost
-          onClick={() => handleNavigation("next")}
-          disabled={currentIndex === imageList.length - 1}
-        >
-          Ảnh sau
-        </Button>
         <Popconfirm
           title="Xoá ảnh này khỏi dataset?"
           onConfirm={handleDelete}
@@ -267,8 +252,33 @@ const Gallery = ({
       </CustomBreadcrumb>
 
       <Loading active={loading} layoutBackground>
+        <Row
+          className="mt-2 mb-4"
+          gutter={[16, 16]}
+          justify="center"
+          style={{ flexWrap: "wrap" }}
+        >
+          <Button
+            className="mr-2"
+            type="primary"
+            ghost
+            onClick={() => handleNavigation("prev")}
+            disabled={currentIndex === 0} 
+          >
+            <i className="fa fa-arrow-left mr-1" /> Ảnh trước
+          </Button>
+          <Button
+            className="mr-2"
+            type="primary"
+            ghost
+            onClick={() => handleNavigation("next")}
+            disabled={currentIndex === imageList.length - 1} 
+          >
+            Ảnh sau <i className="fa fa-arrow-right ml-1" />
+          </Button>
+        </Row>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} span={12}>
             {imageData.link && (
               <Image
                 width="100%"
@@ -297,7 +307,7 @@ const Gallery = ({
               />
             )}
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} span={12}>
             <Form
               form={form}
               name="dynamic_form_nest_item"

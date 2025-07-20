@@ -24,7 +24,7 @@ function History({ myInfo }) {
   const [users, setUsers] = useState({
     dataRes: [],
     currentPage: 1,
-    pageSize: 10,
+    pageSize: 100,
     totalDocs: 0,
     query: {},
   });
