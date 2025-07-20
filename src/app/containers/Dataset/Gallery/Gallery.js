@@ -23,49 +23,60 @@ const layoutCol = { xs: 24, md: 24, xl: 24, xxl: 24 };
 const labelCol = { xs: 24 };
 const initialCaptions = Array(5).fill({ caption: "", segment: "" });
 
-const Gallery = ({ match: { params: { id } } }) => {
+const Gallery = ({
+  match: {
+    params: { id },
+  },
+}) => {
   const history = useHistory();
   const location = useLocation();
   const [form] = Form.useForm();
   const submitRef = useRef();
   const [imageList, setImageList] = useState(location.state?.image_list || []);
-  const [currentIndex, setCurrentIndex] = useState(Number(new URLSearchParams(location.search).get("index")) || 0);
+  const params = Object.fromEntries(new URLSearchParams(window.location.search));
+  const [currentIndex, setCurrentIndex] = useState(params.index ? Number(params.index) : 0);
   const [imageData, setImageData] = useState({ link: null, data: null });
   const [loading, setLoading] = useState(false);
 
-  const updateHistory = useCallback((newIndex, imageId, updatedImageList = imageList) => {
-    const params = new URLSearchParams(location.search);
-    params.set("index", newIndex);
-    history.replace({
-      pathname: `/gallery/${imageId}`,
-      search: params.toString(),
-      state: { ...location.state, image_list: updatedImageList },
-    });
-  }, [history, location, imageList]);
-
-  const fetchImage = useCallback(async (imageId) => {
-    setLoading(true);
-    try {
-      const response = await getGallery(imageId);
-      if (!response) return;
-
-      const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
-      const imgUrl = `${BASE_URL}/${datasetPath}/${response.imageName}`;
-      const imageDetection = response.imageDetection.startsWith("http")
-        ? `${response.imageDetection}?t=${Date.now()}`
-        : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}?t=${Date.now()}`;
-
-      setImageData({ link: imgUrl, data: { ...response, imageDetection } });
-      form.setFieldsValue({
-        image_caption: response.imageCaption?.length > 0 ? response.imageCaption : initialCaptions,
+  const updateHistory = useCallback(
+    (newIndex, imageId, updatedImageList = imageList) => {
+      const params = new URLSearchParams(location.search);
+      params.set("index", newIndex);
+      history.replace({
+        pathname: `/gallery/${imageId}`,
+        search: params.toString(),
+        state: { ...location.state, image_list: updatedImageList },
       });
-    } catch (error) {
-      toast(CONSTANTS.ERROR, "Lấy ảnh thất bại");
-    } finally {
-      setLoading(false);
-    }
-  }, [form]);
+    },
+    [history, location, imageList]
+  );
 
+  const fetchImage = useCallback(
+    async (imageId) => {
+      setLoading(true);
+      try {
+        const response = await getGallery(imageId);
+        if (!response) return;
+
+        const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
+        const imgUrl = `${BASE_URL}/${datasetPath}/${response.imageName}`;
+        const imageDetection = response.imageDetection.startsWith("http")
+          ? `${response.imageDetection}?t=${Date.now()}`
+          : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}?t=${Date.now()}`;
+
+        setImageData({ link: imgUrl, data: { ...response, imageDetection } });
+        form.setFieldsValue({
+          image_caption: response.imageCaption?.length > 0 ? response.imageCaption : initialCaptions,
+        });
+      } catch (error) {
+        toast(CONSTANTS.ERROR, "Lấy ảnh thất bại");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [form]
+  );
+  console.log(currentIndex);
   useEffect(() => {
     if (imageList.length && imageList[currentIndex]) {
       fetchImage(imageList[currentIndex]._id || imageList[currentIndex].id);
@@ -87,8 +98,8 @@ const Gallery = ({ match: { params: { id } } }) => {
       const imageDetection = response.imageDetection.startsWith("http")
         ? `${response.imageDetection}?t=${Date.now()}`
         : `${AI_BASE_URL}/v1/api/images/${response.imageDetection}?t=${Date.now()}`;
-      
-      setImageData(prev => ({
+
+      setImageData((prev) => ({
         ...prev,
         data: { ...response, imageDetection },
       }));
@@ -100,27 +111,33 @@ const Gallery = ({ match: { params: { id } } }) => {
     }
   }, [id]);
 
-  const handleSubmit = useCallback(async (values) => {
-    setLoading(true);
-    try {
-      const dataUpdate = await updateGalleryById(id, { ...values, have_caption: true });
-      form.setFieldsValue({ image_caption: dataUpdate.imageCaption });
-      toast(CONSTANTS.SUCCESS, "Cập nhật dữ liệu thành công");
-    } catch (error) {
-      toast(CONSTANTS.ERROR, "Cập nhật dữ liệu thất bại");
-    } finally {
-      setLoading(false);
-    }
-  }, [id, form]);
+  const handleSubmit = useCallback(
+    async (values) => {
+      setLoading(true);
+      try {
+        const dataUpdate = await updateGalleryById(id, { ...values, have_caption: true });
+        form.setFieldsValue({ image_caption: dataUpdate.imageCaption });
+        toast(CONSTANTS.SUCCESS, "Cập nhật dữ liệu thành công");
+      } catch (error) {
+        toast(CONSTANTS.ERROR, "Cập nhật dữ liệu thất bại");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [id, form]
+  );
 
-  const handleNavigation = useCallback((direction) => {
-    const newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
-    if (newIndex >= 0 && newIndex < imageList.length) {
-      setCurrentIndex(newIndex);
-      form.resetFields();
-      updateHistory(newIndex, imageList[newIndex]._id || imageList[newIndex].id);
-    }
-  }, [currentIndex, imageList, updateHistory, form]);
+  const handleNavigation = useCallback(
+    (direction) => {
+      const newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
+      if (newIndex >= 0 && newIndex < imageList.length) {
+        setCurrentIndex(newIndex);
+        form.resetFields();
+        updateHistory(newIndex, imageList[newIndex]._id || imageList[newIndex].id);
+      }
+    },
+    [currentIndex, imageList, updateHistory, form]
+  );
 
   const handleDelete = useCallback(async () => {
     setLoading(true);
@@ -129,10 +146,10 @@ const Gallery = ({ match: { params: { id } } }) => {
       const response = await deleteGalleryById(imageId);
       if (!response) throw new Error();
 
-      const updatedImageList = imageList.filter(img => img._id !== imageId && img.id !== imageId);
+      const updatedImageList = imageList.filter((img) => img._id !== imageId && img.id !== imageId);
       setImageList(updatedImageList);
       const newIndex = Math.min(currentIndex, updatedImageList.length - 1);
-      
+
       if (updatedImageList.length > 0) {
         updateHistory(newIndex, updatedImageList[newIndex]._id || updatedImageList[newIndex].id, updatedImageList);
       } else {
@@ -154,7 +171,7 @@ const Gallery = ({ match: { params: { id } } }) => {
       if (!response) throw new Error();
 
       const datasetPath = response.datasetId?.datasetPath?.replace(/\\/g, "/");
-      setImageData(prev => ({ ...prev, link: `${BASE_URL}/${datasetPath}/${response.imageName}?t=${Date.now()}` }));
+      setImageData((prev) => ({ ...prev, link: `${BASE_URL}/${datasetPath}/${response.imageName}?t=${Date.now()}` }));
       toast(CONSTANTS.SUCCESS, "Xoay ảnh thành công");
     } catch (error) {
       toast(CONSTANTS.ERROR, "Xoay ảnh thất bại");
@@ -187,7 +204,7 @@ const Gallery = ({ match: { params: { id } } }) => {
   const handleGenerateSegmentCaption = useCallback(async () => {
     setLoading(true);
     try {
-      const captions = form.getFieldValue("image_caption")?.map(item => item.caption) || [];
+      const captions = form.getFieldValue("image_caption")?.map((item) => item.caption) || [];
       const response = await generateSegmentCaption({ caption: captions });
       if (response?.segments?.length) {
         const updatedCaptions = captions.map((caption, i) => ({
